@@ -1,10 +1,10 @@
 -- Main idea: fixed time, but days should advance anyway to
 -- let stuff like the passing of time for seasons work.
+
 -- TODO Make it local
 ---@class FixedTimeHandler
 FixedTimeHandler = {}
 local data = {}
-
 
 ---Will setup everything related to GlobalModData to save the real time and whatever else we may need
 function FixedTimeHandler.Init()
@@ -41,20 +41,38 @@ end
 function FixedTimeHandler.HandleRealTimeData()
     -- TODO Use ModData for this
     data.realTime = data.realTime + FixedTimeHandler.baseDelta
-    print(data.realTime)
+    --print(data.realTime)
     if (data.realTime - 24) > 0 then
+        local months = VIBE_CHECKER_COMMON.GetNewMonthsTable()
 
-        -- TODO Check if we need to advance a year
-
-        -- TODO Check if we need to advance a month and consider leap year (+1 to feb)
-
-
-
-        print("One day has passed, must be set here!")
+        -- Check month
+        --print("One day has passed, must be set here!")
         data.realDay = data.realDay + 1
+        local isLeapYear = FixedTimeHandler.CheckLeapYear(data.realYear)
+
+        -- February, needs adjustmenet because of leap years
+        if isLeapYear and data.realMonth == 2 then
+            months[2] = months[2] + 1
+        end
+
+        -- Check month
+        if data.realDay > months[data.realMonth] then
+            data.realDay = 1
+            data.realMonth = data.realMonth + 1
+
+            -- Check year
+            if data.realMonth > 12 then
+                data.realMonth = 1
+                data.realYear = data.realYear + 1
+            end
+
+        end
+
+
         data.realTime = 0 -- Restart from 0
         FixedTimeHandler.gameTime:setDay(data.realDay)
-        -- TODO Handle months!
+        FixedTimeHandler.gameTime:setMonth(data.realMonth)
+        FixedTimeHandler.gameTime:setDay(data.realYear)
     end
 end
 

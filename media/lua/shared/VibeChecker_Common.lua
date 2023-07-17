@@ -13,5 +13,17 @@ VIBE_CHECKER_COMMON = {
         31, -- October
         30, -- Nov
         31, -- Dec
-    }
+    },
+
 }
+
+---Get a new months table
+---@return table
+function VIBE_CHECKER_COMMON.GetNewMonthsTable()
+    local months = {}
+    for i=1, #VIBE_CHECKER_COMMON.MONTHS do
+        months[i] = VIBE_CHECKER_COMMON.MONTHS[i]
+    end
+
+    return months
+end
