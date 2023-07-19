@@ -94,16 +94,34 @@ function VibeCheckerUI:prerender()
     self.separator = self:drawRect(1, self.btnSet:getBottom() + Y_MARGIN, self.width - 2, 1, 1, 0.4, 0.4, 0.4)
 end
 
-function VibeCheckerUI:onOptionMouseDown(btn)
-    print(btn.internal)
-    if btn.internal == 'SET' then
+function VibeCheckerUI:handleFixedTime()
+    local fixedTime = tonumber(self.entryFixedTime:getInternalText())
+
+    if isClient() then
+        if VibeCheckerUI.isTimeSet then
+            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "StopFixedTime", {})
+            VibeCheckerUI.isTimeSet = false
+        else
+            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SetFixedTime", {fixedTime = fixedTime})
+            VibeCheckerUI.isTimeSet = true
+        end
+    else
         if VibeCheckerUI.isTimeSet then
             FixedTimeHandler.StopFixedTime()
             VibeCheckerUI.isTimeSet = false
         else
-            FixedTimeHandler.SetupFixedTime(tonumber(self.entryFixedTime:getInternalText()))
+            FixedTimeHandler.SetupFixedTime(fixedTime)
             VibeCheckerUI.isTimeSet = true
         end
+
+    end
+
+end
+
+function VibeCheckerUI:onOptionMouseDown(btn)
+    print(btn.internal)
+    if btn.internal == 'SET' then
+        self:handleFixedTime()
     elseif btn.internal == "CLIMATE_CONTROL" then
         ClimateControlDebug.OnOpenPanel()
     end

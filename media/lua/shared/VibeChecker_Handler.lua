@@ -134,31 +134,11 @@ end
 --Events.OnDisconnect.Add(FixedTimeHandler.StopFixedTime)
 
 -------------------------
---* Global Mod Data *--
+-- --* Global Mod Data *--
 
-local function OnInitGlobalModData()
-    --print("Initializing global mod data")
-    data = ModData.getOrCreate(VIBE_CHECKER_COMMON.MOD_ID)
-end
+-- local function OnInitGlobalModData()
+--     --print("Initializing global mod data")
+--     data = ModData.getOrCreate(VIBE_CHECKER_COMMON.MOD_ID)
+-- end
 
-Events.OnInitGlobalModData.Add(OnInitGlobalModData)
-
---------------------------
---* Client Commands *--
-if isServer() then
-    local ClientCommands = {}
-
-    ---Set the fixed time received from a client
-    ---@param args table time=number
-    function ClientCommands.ReceiveFixedTime(args)
-        local time = args.time
-        FixedTimeHandler.SetFixedTime(time)
-    end
-
-    local OnClientCommand = function(module, command, playerObj, args)
-        if module == VIBE_CHECKER_COMMON.MOD_ID and ClientCommands[command] then
-            ClientCommands[command](playerObj, args)
-        end
-    end
-    Events.OnClientCommand.Add(OnClientCommand)
-end
+-- Events.OnInitGlobalModData.Add(OnInitGlobalModData)
