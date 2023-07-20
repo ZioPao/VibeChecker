@@ -6,6 +6,7 @@ local Y_MARGIN = 10 * FONT_SCALE
 VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
 VibeCheckerUI.instance = nil
 VibeCheckerUI.isTimeSet = false -- Static boolean
+VibeCheckerUI.data = {}
 
 function VibeCheckerUI:new(x, y, width, height)
     local o = ISCollapsableWindow:new(x, y, width, height)
@@ -27,11 +28,23 @@ function VibeCheckerUI:new(x, y, width, height)
     return o
 end
 
+function VibeCheckerUI:initialise()
+    ISCollapsableWindow.initialise(self)
+
+    if VibeCheckerUI.isTimeSet then
+        Events.EveryOneMinute.Add(VibeCheckerUI.RequestTimeFromServer)
+    else
+        Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
+    end
+end
+
 function VibeCheckerUI:createChildren()
     ISCollapsableWindow.createChildren(self)
     local yOffset = 30 * FONT_SCALE
     local xMargin = 10 * FONT_SCALE
     local entryHeight = 25 * FONT_SCALE
+
+    --* Time to be set *--
 
     self.labelFixedTime = ISLabel:new(xMargin, yOffset, entryHeight, "Set Time: ", 1, 1, 1, 1, UIFont.NewMedium, true)
     self.labelFixedTime:initialise()
@@ -48,6 +61,28 @@ function VibeCheckerUI:createChildren()
     self.entryFixedTime:setText("")
     self:addChild(self.entryFixedTime)
 
+
+    --* Time already set *--
+
+    self.setTimePanel = ISRichTextPanel:new(0, 0, self.width, entryHeight)
+    self.setTimePanel:initialise()
+    self.setTimePanel.defaultFont = UIFont.Massive
+    self.setTimePanel.anchorTop = false
+    self.setTimePanel.anchorLeft = false
+    self.setTimePanel.anchorBottom = false
+    self.setTimePanel.anchorRight = false
+    self.setTimePanel.marginLeft = 0
+    self.setTimePanel.marginTop = 10
+    self.setTimePanel.marginRight = 0
+    self.setTimePanel.marginBottom = 0
+    self.setTimePanel.autosetheight = true
+    self.setTimePanel.background = false
+    self.setTimePanel:paginate()
+    self.setTimePanel:setEnabled(false)
+    self.setTimePanel:setVisible(false)
+    self:addChild(self.setTimePanel)
+
+    ----------------------------------
 
     self.btnSet = ISButton:new(xMargin, self.labelFixedTime:getBottom() + Y_MARGIN, self.width - xMargin * 2, entryHeight,
         "Set", self, self.onOptionMouseDown)
@@ -73,13 +108,23 @@ end
 function VibeCheckerUI:update()
     ISCollapsableWindow.update(self)
 
+
+    self.entryFixedTime:setEnabled(not VibeCheckerUI.isTimeSet)
+    self.entryFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
+    self.labelFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
+    self.setTimePanel:setEnabled(VibeCheckerUI.isTimeSet)
+    self.setTimePanel:setVisible(VibeCheckerUI.isTimeSet)
+
     if VibeCheckerUI.isTimeSet then
-        self.entryFixedTime:setEnabled(false)
+        local formattedTime = VibeCheckerUI.GetFormattedTime()
+        self.setTimePanel:setText(formattedTime)
+        self.setTimePanel.textDirty = true
+
+
         self.btnSet:setEnable(true)
         self.btnSet:setTitle("Reset")
         -- Set correct text to button. Do it here instead of the buton in case the user closes the panel
     else
-        self.entryFixedTime:setEnabled(true)
         local hourEntry = self.entryFixedTime:getInternalText()
         local isEnabled = hourEntry ~= "" and (tonumber(hourEntry) < 24 and tonumber(hourEntry) > 0)
         self.btnSet:setEnable(isEnabled)
@@ -99,8 +144,10 @@ function VibeCheckerUI:handleFixedTime()
 
     if isClient() then
         if VibeCheckerUI.isTimeSet then
+            Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
             sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "StopFixedTime", {})
         else
+            Events.EveryOneMinute.Add(VibeCheckerUI.RequestTimeFromServer)
             sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SetFixedTime", {fixedTime = fixedTime})
         end
     else
@@ -116,8 +163,9 @@ function VibeCheckerUI:handleFixedTime()
     -- TODO If it's mp, take note is the time was set on the server, it must not be only client side!!
 end
 
+
+
 function VibeCheckerUI:onOptionMouseDown(btn)
-    print(btn.internal)
     if btn.internal == 'SET' then
         self:handleFixedTime()
     elseif btn.internal == "CLIMATE_CONTROL" then
@@ -126,7 +174,10 @@ function VibeCheckerUI:onOptionMouseDown(btn)
 end
 
 function VibeCheckerUI:close()
+    self:removeFromUIManager()
     ISCollapsableWindow.close(self)
+    Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
+
 end
 
 --*******************************--
@@ -147,7 +198,31 @@ function VibeCheckerUI.OnOpenPanel()
     return pnl
 end
 
+---Send a request to the server to receive the actual calculated time
+function VibeCheckerUI.RequestTimeFromServer()
+    sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendTimeToClient", {})
+end
 
+---Set the time received from the server
+---@param time number
+function VibeCheckerUI.SetRealTimeFromServer(time)
+    VibeCheckerUI.realTime = time
+end
+
+function VibeCheckerUI.GetFormattedTime()
+    if VibeCheckerUI.realTime then
+        
+        -- Get minutes
+        local hour = math.floor(VibeCheckerUI.realTime)
+        local decimal = math.fmod(VibeCheckerUI.realTime, 1)
+        local convertedMinutes = math.floor(decimal * 60)
+
+
+        return string.format(" <CENTRE> %02d:%02d", hour, convertedMinutes)
+    else
+        return ""
+    end
+end
 
 
 --************************************-

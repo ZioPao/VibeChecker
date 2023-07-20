@@ -16,7 +16,7 @@ end
 function FixedTimeHandler.Loop()
     FixedTimeHandler.gameTime:setTimeOfDay(FixedTimeHandler.time)
 
-    print(FixedTimeHandler.gameTime:getTimeOfDay())
+    --print(FixedTimeHandler.gameTime:getTimeOfDay())
     FixedTimeHandler.HandleRealTimeData()
 end
 
@@ -35,6 +35,12 @@ function FixedTimeHandler.GetIsTimeSet()
     return FixedTimeHandler.isTimeSet or false
 end
 
+
+---Get realTime value
+---@returns number
+function FixedTimeHandler.GetRealTimeData()
+    return data.realTime
+end
 
 
 
@@ -107,12 +113,12 @@ end
 function FixedTimeHandler.CheckLeapYear(year)
     --local year = FixedTimeHandler.gameTime:getYear()
     if math.fmod(year/4, 1) == 0 then
-        print("Remainder is 0, so...")
+        --print("Remainder is 0, so...")
         if math.fmod(year/100, 1) ~= 0 then
-            print("It's a leap year!")
+            --print("It's a leap year!")
             return true
         elseif math.fmod(year/400, 1) == 0 then
-            print("It's a leap year!")
+            --print("It's a leap year!")
             return true
         end
     end
@@ -137,37 +143,6 @@ end
 -- Will run on server in MP
 if isServer() and not isClient() then
     Events.OnServerStarted.Add(FixedTimeHandler.Init)
-
-
-    local function SendIsTimeSetStatus()
-        print("Someone connected")
-
-        --sendServerCommand(pl, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {})
-    end
-
-
-
 else
     Events.OnGameStart.Add(FixedTimeHandler.Init)
 end
-
-
-
-
--- TODO This works only on MP :(
---Events.OnDisconnect.Add(FixedTimeHandler.StopFixedTime)
-
-
-
-
-
-
--------------------------
--- --* Global Mod Data *--
-
--- local function OnInitGlobalModData()
---     --print("Initializing global mod data")
---     data = ModData.getOrCreate(VIBE_CHECKER_COMMON.MOD_ID)
--- end
-
--- Events.OnInitGlobalModData.Add(OnInitGlobalModData)

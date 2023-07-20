@@ -7,12 +7,15 @@ local ServerCommands = {}
 function ServerCommands.ReceiveIsTimeSetFromServer(args)
     local isTimeSet = args.isTimeSet
     VibeCheckerUI.isTimeSet = isTimeSet
-
     print("[VibeChecker] Received isTimeSet from the server " .. tostring(isTimeSet))
-
 end
 
-
+---Receive time from the server
+---@param args table time=number
+function ServerCommands.ReceiveTimeFromServer(args)
+    local time = args.time
+    VibeCheckerUI.SetRealTimeFromServer(time)
+end
 --------------------------------
 
 local function OnServerCommand(module, command, args)

@@ -11,6 +11,13 @@ function ClientCommands.SendIsTimeSetStatus(playerObj, args)
 	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {isTimeSet=isTimeSet})
 end
 
+---Send the time on the server to the client
+---@param playerObj IsoPlayer
+function ClientCommands.SendTimeToClient(playerObj, _)
+    local time = FixedTimeHandler.GetRealTimeData()
+	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveTimeFromServer', {time=time})
+end
+
 
 ---Set back the correct time on the server
 function ClientCommands.StopFixedTime(_, _)
