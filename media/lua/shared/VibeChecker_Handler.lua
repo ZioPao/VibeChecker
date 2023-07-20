@@ -137,6 +137,34 @@ end
 -- Will run on server in MP
 if isServer() and not isClient() then
     Events.OnServerStarted.Add(FixedTimeHandler.Init)
-else
+    Events.OnSave.Add(FixedTimeHandler.StopFixedTime)
+else    -- SP
     Events.OnGameStart.Add(FixedTimeHandler.Init)
+    Events.OnSave.Add(function()
+        FixedTimeHandler.StopFixedTime()
+        print("RUNNING ON SAVE!")
+    end)
+
+    local function OnFillContextMenu(player, context, worldObjects, test)
+        if test then return true end
+        local playerObj = getSpecificPlayer(player)
+        local clickedPlayer
+        for _, v in ipairs(worldObjects) do
+          local movingObjects = v:getSquare():getMovingObjects()
+          for i = 0, movingObjects:size() - 1 do
+            local obj = movingObjects:get(i)
+            if instanceof(obj, "IsoPlayer") then
+              clickedPlayer = obj
+              break
+            end
+          end
+        end
+        if clickedPlayer and clickedPlayer == playerObj then
+            context:addOption("Open VibeChecker", clickedPlayer, VibeCheckerUI.OnOpenPanel, false)
+        end
+    end
+
+    Events.OnFillWorldObjectContextMenu.Add(OnFillContextMenu)
 end
+
+

@@ -67,7 +67,7 @@ function VibeCheckerUI:createChildren()
 
     --* Time already set *--
 
-    self.setTimePanel = ISRichTextPanel:new(0, self.labelFixedTime:getY(), self.width, entryHeight)
+    self.setTimePanel = ISRichTextPanel:new(0, yOffset - entryHeight/2, self.width, entryHeight)
     self.setTimePanel:initialise()
     self.setTimePanel.defaultFont = UIFont.Massive
     self.setTimePanel.anchorTop = false
@@ -78,7 +78,7 @@ function VibeCheckerUI:createChildren()
     self.setTimePanel.marginTop = 0
     self.setTimePanel.marginRight = 0
     self.setTimePanel.marginBottom = 0
-    self.setTimePanel.autosetheight = true
+    self.setTimePanel.autosetheight = false
     self.setTimePanel.background = false
     self.setTimePanel:paginate()
     self.setTimePanel:setEnabled(false)
@@ -120,6 +120,10 @@ end
 function VibeCheckerUI:update()
     ISCollapsableWindow.update(self)
 
+    -- If it's in SP, then we don't need to sync anything, it's all on the client obviously
+    if not isClient() then
+        VibeCheckerUI.SetRealTimeFromServer(FixedTimeHandler.GetRealTimeData())
+    end
 
     self.entryFixedTime:setEnabled(not VibeCheckerUI.isTimeSet)
     self.entryFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
@@ -196,6 +200,12 @@ end
 --*******************************--
 
 function VibeCheckerUI.OnOpenPanel()
+
+
+    if VibeCheckerUI.instance then
+        VibeCheckerUI.instance:close()
+    end
+
     -- TODO Make it scale based on resolution
     local width = 300 * FONT_SCALE
     local height = 150 * FONT_SCALE
