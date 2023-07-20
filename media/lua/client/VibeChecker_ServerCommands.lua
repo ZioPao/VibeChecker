@@ -1,3 +1,5 @@
+require("VibeChecker_UI")
+
 local ServerCommands = {}
 
 ---Receive the status of the mod from the server
@@ -6,7 +8,7 @@ function ServerCommands.ReceiveIsTimeSetFromServer(args)
     local isTimeSet = args.isTimeSet
     VibeCheckerUI.isTimeSet = isTimeSet
 
-    print("Received isTimeSet from the server " .. tostring(isTimeSet))
+    print("[VibeChecker] Received isTimeSet from the server " .. tostring(isTimeSet))
 
 end
 
@@ -28,10 +30,28 @@ Events.OnServerCommand.Add(OnServerCommand)
 -- ask the server if isTimeSet is on there too, so we can sync it on the client
 
 if isClient() then
-    ---At startup, the client is gonna ask the server if isTimeSet is on or not
-    local function AskIsTimeSetFromServer()
-        sendClientCommand(getPlayer(), VIBE_CHECKER_COMMON.MOD_ID, 'SendIsTimeSetStatus', {})
+
+    local os_time = os.time
+    local eTime = 0
+
+    ---We need to delay it for a bit since this piece of shit won't launch at startup
+    local function HandleDelayedAsk()
+        local cTime = os_time()
+        if cTime > eTime then
+            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendIsTimeSetStatus", {})
+            Events.OnTick.Remove(HandleDelayedAsk)
+        end
     end
 
-    Events.OnConnected.Add(AskIsTimeSetFromServer)
+    ---At startup, the client is gonna ask the server if isTimeSet is on or not
+    local function AskIsTimeSetFromServer()
+        print("[VibeChecker] Should ask thing to server")
+
+        eTime = 5 + os_time()
+        Events.OnTick.Add(HandleDelayedAsk)
+
+    end
+
+    Events.OnCreatePlayer.Add(AskIsTimeSetFromServer)
 end
+

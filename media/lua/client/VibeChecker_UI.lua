@@ -146,3 +146,25 @@ function VibeCheckerUI.OnOpenPanel()
     pnl:bringToTop()
     return pnl
 end
+
+
+
+
+--************************************-
+
+
+require "ISUI/ISAdminPanelUI"
+require "ServerPointsAdminPanel"
+local _ISAdminPanelUICreate = ISAdminPanelUI.create
+
+function ISAdminPanelUI:create()
+    _ISAdminPanelUICreate(self)
+
+    local lastButton = self.children[self.IDMax-1].internal == "CANCEL" and self.children[self.IDMax-2] or self.children[self.IDMax-1]
+    self.btnOpenVibeChecker = ISButton:new(lastButton.x, lastButton.y + 5 + lastButton.height, self.sandboxOptionsBtn.width, self.sandboxOptionsBtn.height, "VibeChecker Menu", self, VibeCheckerUI.OnOpenPanel)
+    self.btnOpenVibeChecker:initialise()
+    self.btnOpenVibeChecker:instantiate()
+    self.btnOpenVibeChecker.borderColor = self.buttonBorderColor
+    self:addChild(self.btnOpenVibeChecker)
+
+end

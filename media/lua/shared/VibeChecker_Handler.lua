@@ -32,7 +32,7 @@ end
 ---Get isTimeSet value
 ---@returns isTimeSet boolean
 function FixedTimeHandler.GetIsTimeSet()
-    return FixedTimeHandler.isTimeSet
+    return FixedTimeHandler.isTimeSet or false
 end
 
 
