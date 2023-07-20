@@ -44,6 +44,9 @@ function VibeCheckerUI:createChildren()
     local xMargin = 10 * FONT_SCALE
     local entryHeight = 25 * FONT_SCALE
 
+
+
+
     --* Time to be set *--
 
     self.labelFixedTime = ISLabel:new(xMargin, yOffset, entryHeight, "Set Time: ", 1, 1, 1, 1, UIFont.NewMedium, true)
@@ -64,7 +67,7 @@ function VibeCheckerUI:createChildren()
 
     --* Time already set *--
 
-    self.setTimePanel = ISRichTextPanel:new(0, 0, self.width, entryHeight)
+    self.setTimePanel = ISRichTextPanel:new(0, self.labelFixedTime:getY(), self.width, entryHeight)
     self.setTimePanel:initialise()
     self.setTimePanel.defaultFont = UIFont.Massive
     self.setTimePanel.anchorTop = false
@@ -72,7 +75,7 @@ function VibeCheckerUI:createChildren()
     self.setTimePanel.anchorBottom = false
     self.setTimePanel.anchorRight = false
     self.setTimePanel.marginLeft = 0
-    self.setTimePanel.marginTop = 10
+    self.setTimePanel.marginTop = 0
     self.setTimePanel.marginRight = 0
     self.setTimePanel.marginBottom = 0
     self.setTimePanel.autosetheight = true
@@ -81,6 +84,14 @@ function VibeCheckerUI:createChildren()
     self.setTimePanel:setEnabled(false)
     self.setTimePanel:setVisible(false)
     self:addChild(self.setTimePanel)
+
+    self.setTimeTooltip = ISToolTip:new()
+    self.setTimeTooltip:setOwner(self)
+    self.setTimeTooltip:addToUIManager()
+    self.setTimeTooltip:setAlwaysOnTop(true)
+    self.setTimeTooltip:setVisible(false)
+    self.setTimeTooltip:setEnabled(false)
+    self.setTimeTooltip.description = "This is the actual time! You will switch back to this time when you press the 'Reset' button."
 
     ----------------------------------
 
@@ -120,6 +131,10 @@ function VibeCheckerUI:update()
         self.setTimePanel:setText(formattedTime)
         self.setTimePanel.textDirty = true
 
+        self.setTimeTooltip:setEnabled(self.setTimePanel:isMouseOver())
+        self.setTimeTooltip:setVisible(self.setTimePanel:isMouseOver())
+        self.setTimeTooltip:setX(self:getMouseX() + 23)
+        self.setTimeTooltip:setY(self:getMouseY() + 23)
 
         self.btnSet:setEnable(true)
         self.btnSet:setTitle("Reset")
