@@ -1,5 +1,17 @@
 local ClientCommands = {}
 
+
+
+---Set back the correct time on the server
+---@param playerObj IsoPlayer
+---@param args table
+function ClientCommands.SendIsTimeSetStatus(playerObj, args)
+    local isTimeSet = FixedTimeHandler.GetIsTimeSet()
+	
+	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {isTimeSet=isTimeSet})
+end
+
+
 ---Set back the correct time on the server
 ---@param playerObj IsoPlayer
 ---@param args table
@@ -21,7 +33,6 @@ local function OnClientCommand(module, command, playerObj, args)
 	if module ~= VIBE_CHECKER_COMMON.MOD_ID then return end
 	if ClientCommands[command] then
 		ClientCommands[command](playerObj, args)
-		ModData.add(VIBE_CHECKER_COMMON.MOD_ID, ClientCommands)
 	end
 end
 Events.OnClientCommand.Add(OnClientCommand)

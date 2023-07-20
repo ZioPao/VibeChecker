@@ -10,8 +10,6 @@ local data = {}
 function FixedTimeHandler.Init()
     FixedTimeHandler.gameTime = getGameTime()
     FixedTimeHandler.baseDelta = FixedTimeHandler.gameTime:getTimeDelta() -- At startup, so 1x
-    -- TODO JUST FOR TEST
-    --Events.EveryTenMinutes.Add(FixedTimeHandler.Loop)
 end
 
 ---Loop ran each in game minute. Will save the real time of the game anyway
@@ -20,11 +18,25 @@ function FixedTimeHandler.Loop()
 
     print(FixedTimeHandler.gameTime:getTimeOfDay())
     FixedTimeHandler.HandleRealTimeData()
-
-
-    -- TODO Update correct real time
-    -- TODO Check if we need to advance by a day, and if so, do it
 end
+
+-----------------
+--* Setters and getters
+
+---Set isTimeSet value
+---@param isTimeSet boolean
+function FixedTimeHandler.SetIsTimeSet(isTimeSet)
+    FixedTimeHandler.isTimeSet = isTimeSet
+end
+
+---Get isTimeSet value
+---@returns isTimeSet boolean
+function FixedTimeHandler.GetIsTimeSet()
+    return FixedTimeHandler.isTimeSet
+end
+
+
+
 
 -----------------
 --* Set stuff
@@ -83,6 +95,7 @@ function FixedTimeHandler.StopFixedTime()
         FixedTimeHandler.gameTime:setTimeOfDay(data.realTime)
     end
 
+    FixedTimeHandler.SetIsTimeSet(false)
     data = {} -- Clean it locally
 end
 
@@ -117,12 +130,23 @@ end
 function FixedTimeHandler.SetupFixedTime(time)
     FixedTimeHandler.time = time
     FixedTimeHandler.SetRealTime()
+    FixedTimeHandler.SetIsTimeSet(true)
     Events.EveryOneMinute.Add(FixedTimeHandler.Loop)
 end
 
 -- Will run on server in MP
 if isServer() and not isClient() then
     Events.OnServerStarted.Add(FixedTimeHandler.Init)
+
+
+    local function SendIsTimeSetStatus()
+        print("Someone connected")
+
+        --sendServerCommand(pl, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {})
+    end
+
+
+
 else
     Events.OnGameStart.Add(FixedTimeHandler.Init)
 end
@@ -132,6 +156,11 @@ end
 
 -- TODO This works only on MP :(
 --Events.OnDisconnect.Add(FixedTimeHandler.StopFixedTime)
+
+
+
+
+
 
 -------------------------
 -- --* Global Mod Data *--

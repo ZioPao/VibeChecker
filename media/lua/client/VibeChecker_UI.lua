@@ -100,22 +100,20 @@ function VibeCheckerUI:handleFixedTime()
     if isClient() then
         if VibeCheckerUI.isTimeSet then
             sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "StopFixedTime", {})
-            VibeCheckerUI.isTimeSet = false
         else
             sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SetFixedTime", {fixedTime = fixedTime})
-            VibeCheckerUI.isTimeSet = true
         end
     else
         if VibeCheckerUI.isTimeSet then
             FixedTimeHandler.StopFixedTime()
-            VibeCheckerUI.isTimeSet = false
         else
             FixedTimeHandler.SetupFixedTime(fixedTime)
-            VibeCheckerUI.isTimeSet = true
         end
-
     end
 
+    VibeCheckerUI.isTimeSet = not VibeCheckerUI.isTimeSet
+
+    -- TODO If it's mp, take note is the time was set on the server, it must not be only client side!!
 end
 
 function VibeCheckerUI:onOptionMouseDown(btn)
