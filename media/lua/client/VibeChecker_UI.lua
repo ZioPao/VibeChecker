@@ -91,7 +91,8 @@ function VibeCheckerUI:createChildren()
     self.setTimeTooltip:setAlwaysOnTop(true)
     self.setTimeTooltip:setVisible(false)
     self.setTimeTooltip:setEnabled(false)
-    self.setTimeTooltip.description = "This is the actual time! You will switch back to this time when you press the 'Reset' button."
+    self.setTimeTooltip.description =
+    "This is the actual time! You will switch back to this time when you press the 'Reset' button."
 
     ----------------------------------
 
@@ -163,7 +164,7 @@ function VibeCheckerUI:handleFixedTime()
             sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "StopFixedTime", {})
         else
             Events.EveryOneMinute.Add(VibeCheckerUI.RequestTimeFromServer)
-            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SetFixedTime", {fixedTime = fixedTime})
+            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SetFixedTime", { fixedTime = fixedTime })
         end
     else
         if VibeCheckerUI.isTimeSet then
@@ -178,8 +179,6 @@ function VibeCheckerUI:handleFixedTime()
     -- TODO If it's mp, take note is the time was set on the server, it must not be only client side!!
 end
 
-
-
 function VibeCheckerUI:onOptionMouseDown(btn)
     if btn.internal == 'SET' then
         self:handleFixedTime()
@@ -192,7 +191,6 @@ function VibeCheckerUI:close()
     self:removeFromUIManager()
     ISCollapsableWindow.close(self)
     Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
-
 end
 
 --*******************************--
@@ -226,19 +224,16 @@ end
 
 function VibeCheckerUI.GetFormattedTime()
     if VibeCheckerUI.realTime then
-        
         -- Get minutes
         local hour = math.floor(VibeCheckerUI.realTime)
         local decimal = math.fmod(VibeCheckerUI.realTime, 1)
         local convertedMinutes = math.floor(decimal * 60)
 
-
         return string.format(" <CENTRE> %02d:%02d", hour, convertedMinutes)
     else
-        return ""
+        return "LOADING REAL TIME"
     end
 end
-
 
 --************************************-
 
@@ -250,11 +245,12 @@ local _ISAdminPanelUICreate = ISAdminPanelUI.create
 function ISAdminPanelUI:create()
     _ISAdminPanelUICreate(self)
 
-    local lastButton = self.children[self.IDMax-1].internal == "CANCEL" and self.children[self.IDMax-2] or self.children[self.IDMax-1]
-    self.btnOpenVibeChecker = ISButton:new(lastButton.x, lastButton.y + 5 + lastButton.height, self.sandboxOptionsBtn.width, self.sandboxOptionsBtn.height, "VibeChecker Menu", self, VibeCheckerUI.OnOpenPanel)
+    local lastButton = self.children[self.IDMax - 1].internal == "CANCEL" and self.children[self.IDMax - 2] or
+        self.children[self.IDMax - 1]
+    self.btnOpenVibeChecker = ISButton:new(lastButton.x, lastButton.y + 5 + lastButton.height,
+        self.sandboxOptionsBtn.width, self.sandboxOptionsBtn.height, "VibeChecker Menu", self, VibeCheckerUI.OnOpenPanel)
     self.btnOpenVibeChecker:initialise()
     self.btnOpenVibeChecker:instantiate()
     self.btnOpenVibeChecker.borderColor = self.buttonBorderColor
     self:addChild(self.btnOpenVibeChecker)
-
 end

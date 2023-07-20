@@ -35,14 +35,11 @@ function FixedTimeHandler.GetIsTimeSet()
     return FixedTimeHandler.isTimeSet or false
 end
 
-
 ---Get realTime value
 ---@returns number
 function FixedTimeHandler.GetRealTimeData()
     return data.realTime
 end
-
-
 
 -----------------
 --* Set stuff
@@ -83,7 +80,6 @@ function FixedTimeHandler.HandleRealTimeData()
                 data.realMonth = 1
                 data.realYear = data.realYear + 1
             end
-
         end
 
 
@@ -112,12 +108,12 @@ end
 ---@return boolean
 function FixedTimeHandler.CheckLeapYear(year)
     --local year = FixedTimeHandler.gameTime:getYear()
-    if math.fmod(year/4, 1) == 0 then
+    if math.fmod(year / 4, 1) == 0 then
         --print("Remainder is 0, so...")
-        if math.fmod(year/100, 1) ~= 0 then
+        if math.fmod(year / 100, 1) ~= 0 then
             --print("It's a leap year!")
             return true
-        elseif math.fmod(year/400, 1) == 0 then
+        elseif math.fmod(year / 400, 1) == 0 then
             --print("It's a leap year!")
             return true
         end
@@ -125,8 +121,6 @@ function FixedTimeHandler.CheckLeapYear(year)
 
     return false
 end
-
-
 
 --*************************-
 --* Remote setup

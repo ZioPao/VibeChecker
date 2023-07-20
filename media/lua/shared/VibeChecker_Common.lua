@@ -21,7 +21,7 @@ VIBE_CHECKER_COMMON = {
 ---@return table
 function VIBE_CHECKER_COMMON.GetNewMonthsTable()
     local months = {}
-    for i=1, #VIBE_CHECKER_COMMON.MONTHS do
+    for i = 1, #VIBE_CHECKER_COMMON.MONTHS do
         months[i] = VIBE_CHECKER_COMMON.MONTHS[i]
     end
 

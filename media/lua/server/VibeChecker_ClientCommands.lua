@@ -7,7 +7,7 @@ local ClientCommands = {}
 ---@param args table
 function ClientCommands.SendIsTimeSetStatus(playerObj, args)
     local isTimeSet = FixedTimeHandler.GetIsTimeSet()
-	print("[VibeChecker] Received request from client for isTimeSet. Right now it's " .. tostring(isTimeSet))
+	--print("[VibeChecker] Received request from client for isTimeSet. Right now it's " .. tostring(isTimeSet))
 	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {isTimeSet=isTimeSet})
 end
 
@@ -35,7 +35,7 @@ end
 
 local function OnClientCommand(module, command, playerObj, args)
 	if module ~= VIBE_CHECKER_COMMON.MOD_ID then return end
-	print("[VibeChecker] Received command: " .. command)
+	--print("[VibeChecker] Received command: " .. command)
 	if ClientCommands[command] then
 		ClientCommands[command](playerObj, args)
 	end
