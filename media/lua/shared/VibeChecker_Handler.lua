@@ -134,11 +134,11 @@ function FixedTimeHandler.SetupFixedTime(time)
     Events.EveryOneMinute.Add(FixedTimeHandler.Loop)
 end
 
--- Will run on server in MP
-if isServer() and not isClient() then
-    Events.OnServerStarted.Add(FixedTimeHandler.Init)
-    Events.OnSave.Add(FixedTimeHandler.StopFixedTime)
-else    -- SP
+
+
+-- SP
+if not isServer() and not isClient() then
+    --print("Running init on client (SP)")
     Events.OnGameStart.Add(FixedTimeHandler.Init)
     Events.OnSave.Add(function()
         if getPlayer():isAsleep() then
@@ -164,11 +164,20 @@ else    -- SP
           end
         end
         if clickedPlayer and clickedPlayer == playerObj then
+            print("Found player")
             context:addOption("Open VibeChecker", clickedPlayer, VibeCheckerUI.OnOpenPanel, false)
+            
         end
     end
 
+    -- For MP, we can access the menu ONLY from the admin panel
     Events.OnFillWorldObjectContextMenu.Add(OnFillContextMenu)
+    
+-- MP
+elseif isServer() then
+    --print("Running init on Server (MP)")
+    Events.OnServerStarted.Add(FixedTimeHandler.Init)
+
+    -- TODO Will this run when players are sleeping?
+    Events.OnSave.Add(FixedTimeHandler.StopFixedTime)
 end
-
-
