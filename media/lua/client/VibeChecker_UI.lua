@@ -201,13 +201,12 @@ end
 
 function VibeCheckerUI.OnOpenPanel()
 
-
     if VibeCheckerUI.instance then
         VibeCheckerUI.instance:close()
     end
 
     -- TODO Make it scale based on resolution
-    local width = 300 * FONT_SCALE
+    local width = 200 * FONT_SCALE
     local height = 150 * FONT_SCALE
 
     local x = getCore():getScreenWidth() / 2 - width

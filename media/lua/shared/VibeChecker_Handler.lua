@@ -103,7 +103,7 @@ end
 
 --* Checks
 
----Check if the year ia leap year
+---Check if the year is a leap year
 ---@param year number
 ---@return boolean
 function FixedTimeHandler.CheckLeapYear(year)
@@ -141,8 +141,12 @@ if isServer() and not isClient() then
 else    -- SP
     Events.OnGameStart.Add(FixedTimeHandler.Init)
     Events.OnSave.Add(function()
-        FixedTimeHandler.StopFixedTime()
-        print("RUNNING ON SAVE!")
+        if getPlayer():isAsleep() then
+            print("Not running on save since we're sleeping")
+        else
+            print("RUNNING ON SAVE")
+            FixedTimeHandler.StopFixedTime()
+        end
     end)
 
     local function OnFillContextMenu(player, context, worldObjects, test)
