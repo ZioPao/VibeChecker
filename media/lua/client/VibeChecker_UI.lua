@@ -2,7 +2,6 @@ local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.NewMedium)
 local FONT_SCALE = FONT_HGT_SMALL / 14
 local Y_MARGIN = 10 * FONT_SCALE
 
--- TODO Make it local after tests
 VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
 VibeCheckerUI.instance = nil
 VibeCheckerUI.isTimeSet = false -- Static boolean
@@ -17,7 +16,7 @@ function VibeCheckerUI:new(x, y, width, height)
     o.width = width
     o.height = height
 
-    o.title = "Vibe Checker"
+    o.title = getText("IGUI_VibeChecker_Title")
     o.variableColor = { r = 0.9, g = 0.55, b = 0.1, a = 1 }
     o.borderColor = { r = 0.4, g = 0.4, b = 0.4, a = 1 }
     o.backgroundColor = { r = 0, g = 0, b = 0, a = 0.8 }
@@ -67,7 +66,7 @@ function VibeCheckerUI:createChildren()
 
     --* Time already set *--
 
-    self.setTimePanel = ISRichTextPanel:new(0, yOffset - entryHeight/2, self.width, entryHeight)
+    self.setTimePanel = ISRichTextPanel:new(0, yOffset - entryHeight / 2, self.width, entryHeight)
     self.setTimePanel:initialise()
     self.setTimePanel.defaultFont = UIFont.Massive
     self.setTimePanel.anchorTop = false
@@ -108,7 +107,7 @@ function VibeCheckerUI:createChildren()
     -- Separator in pre render, need to account for that
 
     self.btnClimateControl = ISButton:new(xMargin, self.btnSet:getBottom() + Y_MARGIN * 2, self.width - xMargin * 2,
-        entryHeight, "Climate Control", self, self.onOptionMouseDown)
+        entryHeight, getText("IGUI_VibeChecker_ClimateControl"), self, self.onOptionMouseDown)
     self.btnClimateControl.borderColor = { r = 0.4, g = 0.4, b = 0.4, a = 1 }
     self.btnClimateControl.internal = "CLIMATE_CONTROL"
     self.btnClimateControl:initialise()
@@ -142,7 +141,7 @@ function VibeCheckerUI:update()
         self.setTimeTooltip:setY(self:getMouseY() + 23)
 
         self.btnSet:setEnable(true)
-        self.btnSet:setTitle("Reset")
+        self.btnSet:setTitle(getText("IGUI_VibeChecker_Reset"))
         -- Set correct text to button. Do it here instead of the buton in case the user closes the panel
     else
         local hourEntry = self.entryFixedTime:getInternalText()
@@ -200,7 +199,6 @@ end
 --*******************************--
 
 function VibeCheckerUI.OnOpenPanel()
-
     if VibeCheckerUI.instance then
         VibeCheckerUI.instance:close()
     end
