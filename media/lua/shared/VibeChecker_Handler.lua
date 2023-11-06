@@ -54,6 +54,11 @@ end
 ---Handles in the loop the real time stuff, to set the correct days, etc.
 function FixedTimeHandler.HandleRealTimeData()
     -- TODO Use ModData for this
+
+    if data.realTime == nil or FixedTimeHandler.baseDelta == nil then
+        FixedTimeHandler.StopFixedTime(true)
+    end
+
     data.realTime = data.realTime + FixedTimeHandler.baseDelta
     --print(data.realTime)
     if (data.realTime - 24) > 0 then
@@ -91,8 +96,9 @@ function FixedTimeHandler.HandleRealTimeData()
 end
 
 ---Set back the correct time
-function FixedTimeHandler.StopFixedTime()
-    if data.realTime then
+---@param force boolean
+function FixedTimeHandler.StopFixedTime(force)
+    if data.realTime or force then
         Events.EveryOneMinute.Remove(FixedTimeHandler.Loop)
         FixedTimeHandler.gameTime:setTimeOfDay(data.realTime)
     end

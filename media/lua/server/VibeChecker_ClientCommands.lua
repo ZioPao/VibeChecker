@@ -54,6 +54,7 @@ function ClientCommands.RequestAccess(playerObj, _)
 
 
 	if hasPermission then
+		print("Assigning player: " .. tostring(playerObj))
 		FixedTimeHandler.AssignUser(playerObj)
 	end
 	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, "ReceivePermission", {hasPermission = hasPermission})
@@ -61,7 +62,7 @@ end
 
 function ClientCommands.ForfeitAccess(playerObj, _)
 	if FixedTimeHandler.assignedUser == playerObj then
-		print("Unassigned player " .. playerObj)
+		print("Unassigned player " .. tostring(playerObj))
 		FixedTimeHandler.assignedUser = nil
 	end
 end

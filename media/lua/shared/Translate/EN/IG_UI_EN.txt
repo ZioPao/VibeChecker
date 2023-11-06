@@ -2,4 +2,6 @@ IG_UI_EN = {
     IGUI_VibeChecker_Title = "Vibe Checker",
     IGUI_VibeChecker_Reset = "Reset",
     IGUI_VibeChecker_ClimateControl = "Climate Control",
+
+    IGUI_VibeChecker_SetTimeTooltip = "This is the actual time! You will switch back to this time when you press the 'Reset' button."
 }

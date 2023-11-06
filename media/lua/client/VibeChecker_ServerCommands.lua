@@ -22,7 +22,7 @@ end
 function ServerCommands.ReceivePermission(args)
     local hasPermission = args.hasPermission
 
-    if hasPermission then VibeCheckerUI.OnOpenPanel() end
+    if hasPermission then VibeCheckerUI.OnOpenPanel() else getPlayer():Say("Someone else is using the menu...") end
 
 end
 --------------------------------

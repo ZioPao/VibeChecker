@@ -1,6 +1,3 @@
--- TODO Days should still go forward even if the time is stopped
-
-
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.NewMedium)
 local FONT_SCALE = FONT_HGT_SMALL / 14
 local Y_MARGIN = 10 * FONT_SCALE
@@ -88,7 +85,7 @@ function VibeCheckerUI:createChildren()
     self.setTimeTooltip:setAlwaysOnTop(true)
     self.setTimeTooltip:setVisible(false)
     self.setTimeTooltip:setEnabled(false)
-    self.setTimeTooltip.description = "This is the actual time! You will switch back to this time when you press the 'Reset' button."
+    self.setTimeTooltip.description = getText("IGUI_VibeChecker_SetTimeTooltip")
 
     ----------------------------------
 
@@ -146,6 +143,14 @@ function VibeCheckerUI:update()
         self.btnSet:setEnable(isEnabled)
         self.btnSet:setTitle("Set")
     end
+
+
+    if self.openedPanel then
+        self.openedPanel:setX(self:getRight())
+        self.openedPanel:setY(self:getBottom() - self:getHeight())
+    end
+
+
 end
 
 function VibeCheckerUI:prerender()
@@ -183,7 +188,12 @@ function VibeCheckerUI:onOptionMouseDown(btn)
     if btn.internal == 'SET' then
         self:handleFixedTime()
     elseif btn.internal == "CLIMATE_CONTROL" then
-        ClimateControlDebug.OnOpenPanel()
+        if self.openedPanel then
+            self.openedPanel:close()
+            self.openedPanel = nil
+        else
+            self.openedPanel = ISDebugPanelBase.OnOpenPanel(ClimateControlDebug, self:getRight(), self:getBottom() - self:getHeight(), 800, 600, "CLIMATE CONTROL")
+        end
     end
 end
 
@@ -191,6 +201,11 @@ function VibeCheckerUI:close()
     self:removeFromUIManager()
     ISCollapsableWindow.close(self)
     Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
+    
+    if self.openedPanel then
+        self.openedPanel:close()
+        self.openedPanel = nil
+    end
 
     if isClient() then
         sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "ForfeitAccess", {})
@@ -244,7 +259,7 @@ function VibeCheckerUI.GetFormattedTime()
 
         return string.format(" <CENTRE> %02d:%02d", hour, convertedMinutes)
     else
-        return "LOADING REAL TIME"
+        return string.format(" <CENTRE> WAIT...")
     end
 end
 
