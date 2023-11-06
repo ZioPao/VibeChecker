@@ -44,7 +44,7 @@ function VibeCheckerUI:createChildren()
     local entryHeight = 25 * FONT_SCALE
 
     --* Time to be set *--
-    self.labelFixedTime = ISLabel:new(xMargin, yOffset, entryHeight, "Set Time: ", 1, 1, 1, 1, UIFont.NewMedium, true)
+    self.labelFixedTime = ISLabel:new(xMargin, yOffset, entryHeight, getText("IGUI_VibeChecker_SetTime"), 1, 1, 1, 1, UIFont.NewMedium, true)
     self.labelFixedTime:initialise()
     self.labelFixedTime:instantiate()
     self:addChild(self.labelFixedTime)
@@ -174,14 +174,12 @@ function VibeCheckerUI:handleFixedTime()
     else
         if VibeCheckerUI.isTimeSet then
             FixedTimeHandler.StopFixedTime()
-        else
+        elseif fixedTime then
             FixedTimeHandler.SetupFixedTime(fixedTime)
         end
     end
 
     VibeCheckerUI.isTimeSet = not VibeCheckerUI.isTimeSet
-
-    -- TODO If it's mp, take note is the time was set on the server, it must not be only client side!!
 end
 
 function VibeCheckerUI:onOptionMouseDown(btn)
@@ -201,7 +199,8 @@ function VibeCheckerUI:close()
     self:removeFromUIManager()
     ISCollapsableWindow.close(self)
     Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
-    
+
+    -- Manage and close the side panel
     if self.openedPanel then
         self.openedPanel:close()
         self.openedPanel = nil
@@ -259,7 +258,7 @@ function VibeCheckerUI.GetFormattedTime()
 
         return string.format(" <CENTRE> %02d:%02d", hour, convertedMinutes)
     else
-        return string.format(" <CENTRE> WAIT...")
+        return string.format(" <CENTRE> " .. getText("IGUI_VibeChecker_Wait"))
     end
 end
 

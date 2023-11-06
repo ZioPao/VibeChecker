@@ -96,7 +96,7 @@ function FixedTimeHandler.HandleRealTimeData()
 end
 
 ---Set back the correct time
----@param force boolean
+---@param force boolean?
 function FixedTimeHandler.StopFixedTime(force)
     if data.realTime or force then
         Events.EveryOneMinute.Remove(FixedTimeHandler.Loop)
@@ -154,9 +154,9 @@ if not isServer() and not isClient() then
     Events.OnGameStart.Add(FixedTimeHandler.Init)
     Events.OnSave.Add(function()
         if getPlayer():isAsleep() then
-            print("Not running on save since we're sleeping")
+           -- print("Not running on save since we're sleeping")
         else
-            print("RUNNING ON SAVE")
+            -- print("RUNNING ON SAVE")
             FixedTimeHandler.StopFixedTime()
         end
     end)
@@ -176,8 +176,7 @@ if not isServer() and not isClient() then
           end
         end
         if clickedPlayer and clickedPlayer == playerObj then
-            print("Found player")
-            context:addOption("Open VibeChecker", clickedPlayer, VibeCheckerUI.OnOpenPanel, false)
+            context:addOption(getText("ContextMenu_VibeChecker_Open"), clickedPlayer, VibeCheckerUI.OnOpenPanel, false)
         end
     end
 
