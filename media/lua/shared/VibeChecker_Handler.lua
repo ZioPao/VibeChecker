@@ -1,7 +1,6 @@
 -- Main idea: fixed time, but days should advance anyway to
 -- let stuff like the passing of time for seasons work.
 
--- TODO Make it local
 ---@class FixedTimeHandler
 FixedTimeHandler = {}
 local data = {}
@@ -15,8 +14,6 @@ end
 ---Loop ran each in game minute. Will save the real time of the game anyway
 function FixedTimeHandler.Loop()
     FixedTimeHandler.gameTime:setTimeOfDay(FixedTimeHandler.time)
-
-    --print(FixedTimeHandler.gameTime:getTimeOfDay())
     FixedTimeHandler.HandleRealTimeData()
 end
 
@@ -46,8 +43,10 @@ end
 
 ---Set the real time from the game
 function FixedTimeHandler.SetRealTime()
+
     data.realTime = FixedTimeHandler.gameTime:getTimeOfDay()
-    data.realDay = FixedTimeHandler.gameTime:getDay()
+
+    data.realDay = FixedTimeHandler.gameTime:getDay()    -- Day is offset by one for some reason
     data.realMonth = FixedTimeHandler.gameTime:getMonth()
     data.realYear = FixedTimeHandler.gameTime:getYear()
 end
@@ -84,9 +83,10 @@ function FixedTimeHandler.HandleRealTimeData()
 
 
         data.realTime = 0 -- Restart from 0
+
         FixedTimeHandler.gameTime:setDay(data.realDay)
         FixedTimeHandler.gameTime:setMonth(data.realMonth)
-        FixedTimeHandler.gameTime:setDay(data.realYear)
+        FixedTimeHandler.gameTime:setYear(data.realYear)
     end
 end
 
@@ -135,6 +135,12 @@ function FixedTimeHandler.SetupFixedTime(time)
 end
 
 
+--- Assign a user, so that other players can't set stuff on the menu
+---@param player IsoPlayer
+function FixedTimeHandler.AssignUser(player)
+    FixedTimeHandler.assignedUser = player
+end
+
 
 -- SP
 if not isServer() and not isClient() then
@@ -166,7 +172,6 @@ if not isServer() and not isClient() then
         if clickedPlayer and clickedPlayer == playerObj then
             print("Found player")
             context:addOption("Open VibeChecker", clickedPlayer, VibeCheckerUI.OnOpenPanel, false)
-            
         end
     end
 

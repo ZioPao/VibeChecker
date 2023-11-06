@@ -1,4 +1,4 @@
-UI_EN = {
+IG_UI_EN = {
     IGUI_VibeChecker_Title = "Vibe Checker",
     IGUI_VibeChecker_Reset = "Reset",
     IGUI_VibeChecker_ClimateControl = "Climate Control",

@@ -17,6 +17,14 @@ function ServerCommands.ReceiveTimeFromServer(args)
     VibeCheckerUI.SetRealTimeFromServer(time)
 end
 
+---comment
+---@param args {hasPermission : boolean}
+function ServerCommands.ReceivePermission(args)
+    local hasPermission = args.hasPermission
+
+    if hasPermission then VibeCheckerUI.OnOpenPanel() end
+
+end
 --------------------------------
 
 local function OnServerCommand(module, command, args)

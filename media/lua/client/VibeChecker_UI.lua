@@ -1,3 +1,6 @@
+-- TODO Days should still go forward even if the time is stopped
+
+
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.NewMedium)
 local FONT_SCALE = FONT_HGT_SMALL / 14
 local Y_MARGIN = 10 * FONT_SCALE
@@ -43,11 +46,7 @@ function VibeCheckerUI:createChildren()
     local xMargin = 10 * FONT_SCALE
     local entryHeight = 25 * FONT_SCALE
 
-
-
-
     --* Time to be set *--
-
     self.labelFixedTime = ISLabel:new(xMargin, yOffset, entryHeight, "Set Time: ", 1, 1, 1, 1, UIFont.NewMedium, true)
     self.labelFixedTime:initialise()
     self.labelFixedTime:instantiate()
@@ -65,7 +64,6 @@ function VibeCheckerUI:createChildren()
 
 
     --* Time already set *--
-
     self.setTimePanel = ISRichTextPanel:new(0, yOffset - entryHeight / 2, self.width, entryHeight)
     self.setTimePanel:initialise()
     self.setTimePanel.defaultFont = UIFont.Massive
@@ -90,8 +88,7 @@ function VibeCheckerUI:createChildren()
     self.setTimeTooltip:setAlwaysOnTop(true)
     self.setTimeTooltip:setVisible(false)
     self.setTimeTooltip:setEnabled(false)
-    self.setTimeTooltip.description =
-    "This is the actual time! You will switch back to this time when you press the 'Reset' button."
+    self.setTimeTooltip.description = "This is the actual time! You will switch back to this time when you press the 'Reset' button."
 
     ----------------------------------
 
@@ -194,9 +191,18 @@ function VibeCheckerUI:close()
     self:removeFromUIManager()
     ISCollapsableWindow.close(self)
     Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
+
+    if isClient() then
+        sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "ForfeitAccess", {})
+    end
 end
 
 --*******************************--
+
+function VibeCheckerUI.RequestAccess()
+    sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "RequestAccess", {})
+end
+
 
 function VibeCheckerUI.OnOpenPanel()
     if VibeCheckerUI.instance then
@@ -255,7 +261,7 @@ function ISAdminPanelUI:create()
     local lastButton = self.children[self.IDMax - 1].internal == "CANCEL" and self.children[self.IDMax - 2] or
         self.children[self.IDMax - 1]
     self.btnOpenVibeChecker = ISButton:new(lastButton.x, lastButton.y + 5 + lastButton.height,
-        self.sandboxOptionsBtn.width, self.sandboxOptionsBtn.height, "VibeChecker Menu", self, VibeCheckerUI.OnOpenPanel)
+        self.sandboxOptionsBtn.width, self.sandboxOptionsBtn.height, "VibeChecker Menu", self, VibeCheckerUI.RequestAccess)
     self.btnOpenVibeChecker:initialise()
     self.btnOpenVibeChecker:instantiate()
     self.btnOpenVibeChecker.borderColor = self.buttonBorderColor
