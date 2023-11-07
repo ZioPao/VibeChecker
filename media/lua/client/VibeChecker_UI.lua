@@ -39,7 +39,7 @@ end
 
 function VibeCheckerUI:createChildren()
     ISCollapsableWindow.createChildren(self)
-    local yOffset = 30 * FONT_SCALE
+    local yOffset = 25 * FONT_SCALE
     local xMargin = 10 * FONT_SCALE
     local entryHeight = 25 * FONT_SCALE
 
@@ -49,8 +49,8 @@ function VibeCheckerUI:createChildren()
     self.labelFixedTime:instantiate()
     self:addChild(self.labelFixedTime)
 
-    self.entryFixedTime = ISTextEntryBox:new("Hour", self.labelFixedTime:getRight() + xMargin, self.labelFixedTime.y,
-        self.width - self.labelFixedTime.width - xMargin * 4, entryHeight)
+    self.entryFixedTime = ISTextEntryBox:new("Hour", self.width/2 , self.labelFixedTime.y + 8,
+        self.width/2 - xMargin, entryHeight/2)
     self.entryFixedTime:initialise()
     self.entryFixedTime:instantiate()
     self.entryFixedTime:setClearButton(true)
@@ -61,31 +61,52 @@ function VibeCheckerUI:createChildren()
 
 
     --* Time already set *--
-    self.setTimePanel = ISRichTextPanel:new(0, yOffset - entryHeight / 2, self.width, entryHeight)
-    self.setTimePanel:initialise()
-    self.setTimePanel.defaultFont = UIFont.Massive
-    self.setTimePanel.anchorTop = false
-    self.setTimePanel.anchorLeft = false
-    self.setTimePanel.anchorBottom = false
-    self.setTimePanel.anchorRight = false
-    self.setTimePanel.marginLeft = 0
-    self.setTimePanel.marginTop = 0
-    self.setTimePanel.marginRight = 0
-    self.setTimePanel.marginBottom = 0
-    self.setTimePanel.autosetheight = false
-    self.setTimePanel.background = false
-    self.setTimePanel:paginate()
-    self.setTimePanel:setEnabled(false)
-    self.setTimePanel:setVisible(false)
-    self:addChild(self.setTimePanel)
+    self.realTimePanel = ISRichTextPanel:new(0, yOffset - entryHeight / 2, self.width, entryHeight)
+    self.realTimePanel:initialise()
+    self.realTimePanel.defaultFont = UIFont.Large
+    self.realTimePanel.anchorTop = false
+    self.realTimePanel.anchorLeft = false
+    self.realTimePanel.anchorBottom = false
+    self.realTimePanel.anchorRight = false
+    self.realTimePanel.marginLeft = 0
+    self.realTimePanel.marginTop = 5
+    self.realTimePanel.marginRight = 0
+    self.realTimePanel.marginBottom = 0
+    self.realTimePanel.autosetheight = false
+    self.realTimePanel.background = false
+    self.realTimePanel:paginate()
+    self.realTimePanel:setEnabled(false)
+    self.realTimePanel:setVisible(false)
+    self:addChild(self.realTimePanel)
+    
 
-    self.setTimeTooltip = ISToolTip:new()
-    self.setTimeTooltip:setOwner(self)
-    self.setTimeTooltip:addToUIManager()
-    self.setTimeTooltip:setAlwaysOnTop(true)
-    self.setTimeTooltip:setVisible(false)
-    self.setTimeTooltip:setEnabled(false)
-    self.setTimeTooltip.description = getText("IGUI_VibeChecker_SetTimeTooltip")
+    self.fixedTimePanel = ISRichTextPanel:new(0, self.realTimePanel:getBottom() + 2, self.width, entryHeight)
+    self.fixedTimePanel:initialise()
+    self.fixedTimePanel.defaultFont = UIFont.Large
+    self.fixedTimePanel.anchorTop = false
+    self.fixedTimePanel.anchorLeft = false
+    self.fixedTimePanel.anchorBottom = false
+    self.fixedTimePanel.anchorRight = false
+    self.fixedTimePanel.marginLeft = 0
+    self.fixedTimePanel.marginTop = 5
+    self.fixedTimePanel.marginRight = 0
+    self.fixedTimePanel.marginBottom = 0
+    self.fixedTimePanel.autosetheight = false
+    self.fixedTimePanel.background = false
+    self.fixedTimePanel:paginate()
+    self.fixedTimePanel:setEnabled(false)
+    self.fixedTimePanel:setVisible(false)
+    self:addChild(self.fixedTimePanel)
+
+
+
+    self.realTimeTooltip = ISToolTip:new()
+    self.realTimeTooltip:setOwner(self)
+    self.realTimeTooltip:addToUIManager()
+    self.realTimeTooltip:setAlwaysOnTop(true)
+    self.realTimeTooltip:setVisible(false)
+    self.realTimeTooltip:setEnabled(false)
+    self.realTimeTooltip.description = getText("IGUI_VibeChecker_RealTimeTooltip")
 
     ----------------------------------
 
@@ -121,18 +142,24 @@ function VibeCheckerUI:update()
     self.entryFixedTime:setEnabled(not VibeCheckerUI.isTimeSet)
     self.entryFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
     self.labelFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
-    self.setTimePanel:setEnabled(VibeCheckerUI.isTimeSet)
-    self.setTimePanel:setVisible(VibeCheckerUI.isTimeSet)
 
+
+    self.realTimePanel:setEnabled(VibeCheckerUI.isTimeSet)
+    self.realTimePanel:setVisible(VibeCheckerUI.isTimeSet)
+    self.fixedTimePanel:setEnabled(VibeCheckerUI.isTimeSet)
+    self.fixedTimePanel:setVisible(VibeCheckerUI.isTimeSet)
     if VibeCheckerUI.isTimeSet then
         local formattedTime = VibeCheckerUI.GetFormattedTime()
-        self.setTimePanel:setText(formattedTime)
-        self.setTimePanel.textDirty = true
+        self.realTimePanel:setText("Real time: " .. formattedTime)
+        self.realTimePanel.textDirty = true
 
-        self.setTimeTooltip:setEnabled(self.setTimePanel:isMouseOver())
-        self.setTimeTooltip:setVisible(self.setTimePanel:isMouseOver())
-        self.setTimeTooltip:setX(self:getMouseX() + 23)
-        self.setTimeTooltip:setY(self:getMouseY() + 23)
+        self.fixedTimePanel:setText("Fixed Time: 12:00")
+        self.fixedTimePanel.textDirty = true
+
+        self.realTimeTooltip:setEnabled(self.realTimePanel:isMouseOver())
+        self.realTimeTooltip:setVisible(self.realTimePanel:isMouseOver())
+        self.realTimeTooltip:setX(self:getMouseX() + 23)
+        self.realTimeTooltip:setY(self:getMouseY() + 23)
 
         self.btnSet:setEnable(true)
         self.btnSet:setTitle(getText("IGUI_VibeChecker_Reset"))
@@ -144,13 +171,16 @@ function VibeCheckerUI:update()
         self.btnSet:setTitle("Set")
     end
 
+end
 
+function VibeCheckerUI:render()
+    ISCollapsableWindow.render(self)
+
+    -- Handle openPanel syncing with the main one
     if self.openedPanel then
         self.openedPanel:setX(self:getRight())
         self.openedPanel:setY(self:getBottom() - self:getHeight())
     end
-
-
 end
 
 function VibeCheckerUI:prerender()
@@ -209,6 +239,8 @@ function VibeCheckerUI:close()
     if isClient() then
         sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "ForfeitAccess", {})
     end
+
+    VibeCheckerUI.instance = nil
 end
 
 --*******************************--
@@ -256,7 +288,7 @@ function VibeCheckerUI.GetFormattedTime()
         local decimal = math.fmod(VibeCheckerUI.realTime, 1)
         local convertedMinutes = math.floor(decimal * 60)
 
-        return string.format(" <CENTRE> %02d:%02d", hour, convertedMinutes)
+        return string.format("%02d:%02d", hour, convertedMinutes)
     else
         return string.format(" <CENTRE> " .. getText("IGUI_VibeChecker_Wait"))
     end
