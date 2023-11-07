@@ -57,6 +57,7 @@ function FixedTimeHandler.HandleRealTimeData()
 
     if data.realTime == nil or FixedTimeHandler.baseDelta == nil then
         FixedTimeHandler.StopFixedTime(true)
+        return
     end
 
     data.realTime = data.realTime + FixedTimeHandler.baseDelta
