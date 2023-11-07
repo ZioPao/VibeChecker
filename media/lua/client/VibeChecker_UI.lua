@@ -2,8 +2,18 @@ local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.NewMedium)
 local FONT_SCALE = FONT_HGT_SMALL / 14
 local Y_MARGIN = 10 * FONT_SCALE
 
+local STR_TAB = {
+    REAL_TIME_STR = getText("IGUI_VibeChecker_RealTime"),
+    REAL_TIME_TOOLTIP_STR = getText("IGUI_VibeChecker_RealTimeTooltip"),
+    FIXED_TIME_STR = getText("IGUI_VibeChecker_FixedTime"),
+    FIXED_TIME_TOOLTIP_STR = getText("IGUI_VibeChecker_FixedTimeTooltip"),
+    SET_BTN_STR = getText("IGUI_VibeChecker_SetBtn"),
+    RESET_BTN_STR = getText("IGUI_VibeChecker_ResetBtn")
+}
+
+------------------
+
 VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
-VibeCheckerUI.instance = nil
 VibeCheckerUI.isTimeSet = false -- Static boolean
 VibeCheckerUI.data = {}
 
@@ -36,6 +46,12 @@ function VibeCheckerUI:initialise()
     end
 end
 
+---Creates a ISRichTextPanel
+---@param xMargin number
+---@param yMargin number
+---@param width number
+---@param height number
+---@return ISRichTextPanel
 function VibeCheckerUI:createRichTextPanel(xMargin, yMargin, width, height)
     local panel = ISRichTextPanel:new(xMargin, yMargin, width, height)
     panel:initialise()
@@ -88,7 +104,15 @@ function VibeCheckerUI:createChildren()
     self.realTimeTooltip:setAlwaysOnTop(true)
     self.realTimeTooltip:setVisible(false)
     self.realTimeTooltip:setEnabled(false)
-    self.realTimeTooltip.description = getText("IGUI_VibeChecker_RealTimeTooltip")
+    self.realTimeTooltip.description = STR_TAB.REAL_TIME_TOOLTIP_STR
+
+    self.fixedTimeTooltip = ISToolTip:new()
+    self.fixedTimeTooltip:setOwner(self)
+    self.fixedTimeTooltip:addToUIManager()
+    self.fixedTimeTooltip:setAlwaysOnTop(true)
+    self.fixedTimeTooltip:setVisible(false)
+    self.fixedTimeTooltip:setEnabled(false)
+    self.fixedTimeTooltip.description = STR_TAB.FIXED_TIME_TOOLTIP_STR
 
     ----------------------------------
 
@@ -121,45 +145,64 @@ function VibeCheckerUI:createChildren()
     self:addChild(self.fixedTimePanel)
 end
 
+---Updated the text for a certain ISRichTextPanel
+---@param panel ISRichTextPanel
+---@param topLine string
+---@param time number | string?
+function VibeCheckerUI:updateText(panel, topLine, time)
+    local formattedString = VibeCheckerUI.GetFormattedTime(tonumber(time))
+    panel:setText(" <CENTRE> " .. topLine .. " <LINE> " .. formattedString)
+    panel.textDirty = true
+end
+
+---Set a panel as active
+---@param panel ISUIElement
+---@param isActive boolean
+function VibeCheckerUI:activatePanel(panel, isActive)
+    panel:setEnabled(isActive)
+    panel:setVisible(isActive)
+end
+
+---Activate a tooltip if the connect one is hovered on
+---@param tooltipPanel ISToolTip
+---@param connectedPanel ISUIElement
+function VibeCheckerUI:handleTooltip(tooltipPanel, connectedPanel)
+    tooltipPanel:setEnabled(connectedPanel:isMouseOver())
+    tooltipPanel:setVisible(connectedPanel:isMouseOver())
+    tooltipPanel:setX(self:getMouseX() + 23)
+    tooltipPanel:setY(self:getMouseY() + 23)
+
+end
+
 function VibeCheckerUI:update()
     ISCollapsableWindow.update(self)
-
     -- If it's in SP, then we don't need to sync anything, it's all on the client obviously
     if not isClient() then
         VibeCheckerUI.SetRealTimeFromServer(FixedTimeHandler.GetRealTimeData())
     end
 
-    self.entryFixedTime:setEnabled(not VibeCheckerUI.isTimeSet)
-    self.entryFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
-    self.labelFixedTime:setVisible(not VibeCheckerUI.isTimeSet)
+    self:activatePanel(self.entryFixedTime, not VibeCheckerUI.isTimeSet)
+    self:activatePanel(self.labelFixedTime, not VibeCheckerUI.isTimeSet)
+    self:activatePanel(self.realTimePanel, VibeCheckerUI.isTimeSet)
+    self:activatePanel(self.fixedTimePanel, VibeCheckerUI.isTimeSet)
 
-
-    self.realTimePanel:setEnabled(VibeCheckerUI.isTimeSet)
-    self.realTimePanel:setVisible(VibeCheckerUI.isTimeSet)
-    self.fixedTimePanel:setEnabled(VibeCheckerUI.isTimeSet)
-    self.fixedTimePanel:setVisible(VibeCheckerUI.isTimeSet)
     if VibeCheckerUI.isTimeSet and VibeCheckerUI.realTime then
-        local formattedRealTime = VibeCheckerUI.GetFormattedTime(VibeCheckerUI.realTime)
-        self.realTimePanel:setText(" <CENTRE> Real time <LINE> " .. formattedRealTime)
-        self.realTimePanel.textDirty = true
+        self:updateText(self.realTimePanel, STR_TAB.REAL_TIME_STR, VibeCheckerUI.realTime)
+        self:updateText(self.fixedTimePanel, STR_TAB.FIXED_TIME_STR, self.entryFixedTime:getInternalText())
 
-        local formattedFixedTime = VibeCheckerUI.GetFormattedTime(tonumber(self.entryFixedTime:getInternalText()))
-        self.fixedTimePanel:setText(" <CENTRE> Fixed time <LINE> " .. formattedFixedTime)
-        self.fixedTimePanel.textDirty = true
+        self:handleTooltip(self.realTimeTooltip, self.realTimePanel)
+        self:handleTooltip(self.fixedTimeTooltip, self.fixedTimePanel)
 
-        self.realTimeTooltip:setEnabled(self.realTimePanel:isMouseOver())
-        self.realTimeTooltip:setVisible(self.realTimePanel:isMouseOver())
-        self.realTimeTooltip:setX(self:getMouseX() + 23)
-        self.realTimeTooltip:setY(self:getMouseY() + 23)
-
+        -- Set correct text to button.
+        -- Do it here instead of the buton in case the user closes the panel
         self.btnSet:setEnable(true)
-        self.btnSet:setTitle(getText("IGUI_VibeChecker_Reset"))
-        -- Set correct text to button. Do it here instead of the buton in case the user closes the panel
+        self.btnSet:setTitle(STR_TAB.RESET_BTN_STR)
     else
+        
         local hourEntry = self.entryFixedTime:getInternalText()
         local isEnabled = hourEntry ~= "" and (tonumber(hourEntry) < 24 and tonumber(hourEntry) > 0)
         self.btnSet:setEnable(isEnabled)
-        self.btnSet:setTitle("Set")
+        self.btnSet:setTitle(STR_TAB.SET_BTN_STR)
     end
 
 end
