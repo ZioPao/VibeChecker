@@ -10,7 +10,7 @@ IG_UI_EN = {
     IGUI_VibeChecker_RealTimeTooltip = "This is the actual time! You will switch back to this time when you press the 'Reset' button.",
 
     IGUI_VibeChecker_FixedTime = "Fixed time",
-    IGUI_VibeChecker_FixedTimeTooltip = "This is the time you set. Days will still go forward nonetheless."
+    IGUI_VibeChecker_FixedTimeTooltip = "This is the time you set. Days will still go forward nonetheless.",
 
     IGUI_VibeChecker_Wait = "WAIT..."
 }

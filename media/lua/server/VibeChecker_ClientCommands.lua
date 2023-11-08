@@ -51,11 +51,10 @@ function ClientCommands.RequestAccess(playerObj, _)
 		end
 	end
 
-
-
 	if hasPermission then
 		print("Assigning player: " .. tostring(playerObj))
 		FixedTimeHandler.AssignUser(playerObj)
+		ClientCommands.SendIsTimeSetStatus(playerObj)
 	end
 	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, "ReceivePermission", {hasPermission = hasPermission})
 end
