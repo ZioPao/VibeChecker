@@ -1,9 +1,15 @@
 require("VibeChecker_UI")
 
+-- TODO Normal players in MP should be able to ask the server the "real time" from a chat command
+-- TODO Sandbox Option for SP to fix the time and preventing people from opening the UI
+-- TODO Way to import\export presets for the Climate Control
+-- TODO Sleep seems strange
+-- Fix Fix collision for Opening Panel
+
 local ServerCommands = {}
 
 ---Receive the status of the mod from the server
----@param args table isTimeSet=boolean
+---@param args {isTimeSet : boolean}
 function ServerCommands.ReceiveIsTimeSetFromServer(args)
     local isTimeSet = args.isTimeSet
     VibeCheckerUI.isTimeSet = isTimeSet
@@ -11,13 +17,12 @@ function ServerCommands.ReceiveIsTimeSetFromServer(args)
 end
 
 ---Receive time from the server
----@param args table time=number
+---@param args {time : number}
 function ServerCommands.ReceiveTimeFromServer(args)
     local time = args.time
     VibeCheckerUI.SetRealTimeFromServer(time)
 end
 
----comment
 ---@param args {hasPermission : boolean}
 function ServerCommands.ReceivePermission(args)
     local hasPermission = args.hasPermission

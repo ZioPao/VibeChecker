@@ -2,6 +2,9 @@
 -- let stuff like the passing of time for seasons work.
 
 ---@class FixedTimeHandler
+---@field gameTime GameTime
+---@field baseDelta number
+---@field timeBeforeSleep number?
 FixedTimeHandler = {}
 local data = {}
 
@@ -26,6 +29,12 @@ function FixedTimeHandler.SetIsTimeSet(isTimeSet)
     FixedTimeHandler.isTimeSet = isTimeSet
 end
 
+---comment
+---@param time number?
+function FixedTimeHandler.SetTimeBeforeSleep(time)
+    FixedTimeHandler.timeBeforeSleep = time
+end
+
 ---Get isTimeSet value
 ---@returns isTimeSet boolean
 function FixedTimeHandler.GetIsTimeSet()
@@ -36,6 +45,12 @@ end
 ---@returns number
 function FixedTimeHandler.GetRealTimeData()
     return data.realTime
+end
+
+---comment
+---@return number?
+function FixedTimeHandler.GetTimeBeforeSleep()
+    return FixedTimeHandler.timeBeforeSleep
 end
 
 -----------------
@@ -151,13 +166,26 @@ end
 
 -- SP
 if not isServer() and not isClient() then
-    --print("Running init on client (SP)")
+    print("Running init on client (SP)")
+    local oldFixedTime = nil
+
     Events.OnGameStart.Add(FixedTimeHandler.Init)
     Events.OnSave.Add(function()
-        if getPlayer():isAsleep() then
-           -- print("Not running on save since we're sleeping")
+
+        -- FIXME This is broken!
+
+        --if FixedTimeHandler.isTimeSet == false or oldFixedTime == nil then return end
+        local timeBeforeSleep = FixedTimeHandler.GetTimeBeforeSleep()
+        if getPlayer():isAsleep() and timeBeforeSleep then
+           print("Not running on save since we're sleeping, stopping Fixed Time for now")
+        elseif timeBeforeSleep then
+            -- Second time, after player is done sleeping
+            print("Setting time again!")
+            FixedTimeHandler.SetupFixedTime(timeBeforeSleep)
+            FixedTimeHandler.SetTimeBeforeSleep(nil)
         else
-            -- print("RUNNING ON SAVE")
+            -- Player is stopping playing
+            print("Stopping time")
             FixedTimeHandler.StopFixedTime()
         end
     end)
@@ -183,7 +211,6 @@ if not isServer() and not isClient() then
 
     -- For MP, we can access the menu ONLY from the admin panel
     Events.OnFillWorldObjectContextMenu.Add(OnFillContextMenu)
-    
 -- MP
 elseif isServer() then
     --print("Running init on Server (MP)")
