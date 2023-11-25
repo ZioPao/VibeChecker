@@ -18,16 +18,23 @@ end
 function Delay.Loop()
     local cTime = os_time()
     if cTime > Delay.eTime then
+        ---@diagnostic disable-next-line: deprecated
         Delay.funcToRun(unpack(Delay.args))
         Events.OnTick.Remove(Delay.Loop)
     end
 end
 
 
+
+
+-- Skip this part if we're in a MP environment
+if isClient() then return end
+
 local og_ISWorldObjectContextMenu_onSleepWalkToComplete = ISWorldObjectContextMenu.onSleepWalkToComplete
 
 ---@param playerNum number
 ---@param bed any
+---@diagnostic disable-next-line: duplicate-set-field
 function ISWorldObjectContextMenu.onSleepWalkToComplete(playerNum, bed)
     print("Stopping FixedTimeHandler, player is going to sleep")
 
