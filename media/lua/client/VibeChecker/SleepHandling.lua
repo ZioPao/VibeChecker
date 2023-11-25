@@ -34,7 +34,6 @@ function ISWorldObjectContextMenu.onSleepWalkToComplete(playerNum, bed)
     if FixedTimeHandler.isTimeSet then
         FixedTimeHandler.SetTimeBeforeSleep(tonumber(FixedTimeHandler.time))
         FixedTimeHandler.StopFixedTime(true)     -- Stop temporarily
-
         -- Wait 1 sec or so to be sure that the time has been synced. Bit of a shitty way to handle it, but I don't have other ideas for now
         Delay.RunAfter(og_ISWorldObjectContextMenu_onSleepWalkToComplete, {playerNum, bed}, 1)
     else

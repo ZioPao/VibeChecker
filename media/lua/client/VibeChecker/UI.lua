@@ -198,7 +198,11 @@ function VibeCheckerUI:update()
 
     if VibeCheckerUI.isTimeSet then
         self:updateText(self.realTimePanel, STR_TAB.REAL_TIME_STR, VibeCheckerUI.realTime)
-        self:updateText(self.fixedTimePanel, STR_TAB.FIXED_TIME_STR, getGameTime():getTimeOfDay())
+        if getPlayer():isAsleep() then
+            self:updateText(self.fixedTimePanel, STR_TAB.FIXED_TIME_STR, VibeCheckerUI.realTime)
+        else
+            self:updateText(self.fixedTimePanel, STR_TAB.FIXED_TIME_STR, getGameTime():getTimeOfDay())
+        end
 
         self:handleTooltip(self.realTimeTooltip, self.realTimePanel)
         self:handleTooltip(self.fixedTimeTooltip, self.fixedTimePanel)
