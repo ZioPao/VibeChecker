@@ -4,7 +4,6 @@ require("VibeChecker_UI")
 -- TODO Sandbox Option for SP to fix the time and preventing people from opening the UI
 -- TODO Way to import\export presets for the Climate Control
 -- TODO Sleep seems strange
--- Fix Fix collision for Opening Panel
 
 local ServerCommands = {}
 

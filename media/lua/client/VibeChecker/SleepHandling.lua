@@ -5,7 +5,6 @@ local os_time = os.time
 ---@field funcToRun function
 local Delay = {}
 
----comment
 ---@param funcToRun function
 ---@param args table
 ---@param delay number
@@ -25,20 +24,21 @@ function Delay.Loop()
 end
 
 
-
-
-
-
 local og_ISWorldObjectContextMenu_onSleepWalkToComplete = ISWorldObjectContextMenu.onSleepWalkToComplete
-
-
--- TODO Loop until we're sure that stop fixed time is ok
 
 ---@param playerNum number
 ---@param bed any
 function ISWorldObjectContextMenu.onSleepWalkToComplete(playerNum, bed)
     print("Stopping FixedTimeHandler, player is going to sleep")
-    FixedTimeHandler.SetTimeBeforeSleep(tonumber(FixedTimeHandler.time))
-    FixedTimeHandler.StopFixedTime(true)     -- Stop temporarily
-    Delay.RunAfter(og_ISWorldObjectContextMenu_onSleepWalkToComplete, {playerNum, bed}, 1)
+
+    if FixedTimeHandler.isTimeSet then
+        FixedTimeHandler.SetTimeBeforeSleep(tonumber(FixedTimeHandler.time))
+        FixedTimeHandler.StopFixedTime(true)     -- Stop temporarily
+
+        -- Wait 1 sec or so to be sure that the time has been synced. Bit of a shitty way to handle it, but I don't have other ideas for now
+        Delay.RunAfter(og_ISWorldObjectContextMenu_onSleepWalkToComplete, {playerNum, bed}, 1)
+    else
+        og_ISWorldObjectContextMenu_onSleepWalkToComplete(playerNum, bed)
+    end
+
 end

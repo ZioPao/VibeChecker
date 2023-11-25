@@ -14,6 +14,16 @@ function FixedTimeHandler.Init()
     FixedTimeHandler.baseDelta = FixedTimeHandler.gameTime:getTimeDelta() -- At startup, so 1x
 end
 
+
+--* Startup handling *--
+
+if not isServer() and not isClient() then
+    Events.OnGameStart.Add(FixedTimeHandler.Init)
+elseif isServer() then
+    Events.OnServerStarted.Add(FixedTimeHandler.Init)
+end
+
+
 ---Loop ran each in game minute. Will save the real time of the game anyway
 function FixedTimeHandler.Loop()
     if not FixedTimeHandler.GetIsTimeSet() then return end
@@ -157,7 +167,6 @@ function FixedTimeHandler.SetupFixedTime(time)
     FixedTimeHandler.SetIsTimeSet(true)
     Events.EveryOneMinute.Add(FixedTimeHandler.Loop)
 end
-
 
 --- Assign a user, so that other players can't set stuff on the menu
 ---@param player IsoPlayer
