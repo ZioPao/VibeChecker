@@ -1,0 +1,4 @@
+UI_EN  = {
+    UI_optionscreen_binding_VibeChecker = "Vibe Checker",
+    UI_optionscreen_binding_OpenVibeChecker = "Open Panel",
+}

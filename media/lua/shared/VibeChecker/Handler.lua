@@ -16,6 +16,8 @@ end
 
 ---Loop ran each in game minute. Will save the real time of the game anyway
 function FixedTimeHandler.Loop()
+    if not FixedTimeHandler.GetIsTimeSet() then return end
+
     FixedTimeHandler.gameTime:setTimeOfDay(FixedTimeHandler.time)
     FixedTimeHandler.HandleRealTimeData()
 end
@@ -163,59 +165,3 @@ function FixedTimeHandler.AssignUser(player)
     FixedTimeHandler.assignedUser = player
 end
 
-
--- SP
-if not isServer() and not isClient() then
-    print("Running init on client (SP)")
-    local oldFixedTime = nil
-
-    Events.OnGameStart.Add(FixedTimeHandler.Init)
-    Events.OnSave.Add(function()
-
-        -- FIXME This is broken!
-
-        --if FixedTimeHandler.isTimeSet == false or oldFixedTime == nil then return end
-        local timeBeforeSleep = FixedTimeHandler.GetTimeBeforeSleep()
-        if getPlayer():isAsleep() and timeBeforeSleep then
-           print("Not running on save since we're sleeping, stopping Fixed Time for now")
-        elseif timeBeforeSleep then
-            -- Second time, after player is done sleeping
-            print("Setting time again!")
-            FixedTimeHandler.SetupFixedTime(timeBeforeSleep)
-            FixedTimeHandler.SetTimeBeforeSleep(nil)
-        else
-            -- Player is stopping playing
-            print("Stopping time")
-            FixedTimeHandler.StopFixedTime()
-        end
-    end)
-
-    local function OnFillContextMenu(player, context, worldObjects, test)
-        if test then return true end
-        local playerObj = getSpecificPlayer(player)
-        local clickedPlayer
-        for _, v in ipairs(worldObjects) do
-          local movingObjects = v:getSquare():getMovingObjects()
-          for i = 0, movingObjects:size() - 1 do
-            local obj = movingObjects:get(i)
-            if instanceof(obj, "IsoPlayer") then
-              clickedPlayer = obj
-              break
-            end
-          end
-        end
-        if clickedPlayer and clickedPlayer == playerObj then
-            context:addOption(getText("ContextMenu_VibeChecker_Open"), clickedPlayer, VibeCheckerUI.OnOpenPanel, false)
-        end
-    end
-
-    -- For MP, we can access the menu ONLY from the admin panel
-    Events.OnFillWorldObjectContextMenu.Add(OnFillContextMenu)
--- MP
-elseif isServer() then
-    --print("Running init on Server (MP)")
-    Events.OnServerStarted.Add(FixedTimeHandler.Init)
-
-    -- TODO Will this run when players are sleeping?
-    Events.OnSave.Add(FixedTimeHandler.StopFixedTime)
-end
