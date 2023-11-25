@@ -14,10 +14,10 @@ local STR_TAB = {
 
 ------------------
 
+---@class VibeCheckerUI : ISCollapsableWindow
 VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
 VibeCheckerUI.realTime = -1     -- Init
 VibeCheckerUI.isTimeSet = false -- Static boolean
-VibeCheckerUI.data = {}
 
 function VibeCheckerUI:new(x, y, width, height)
     local o = ISCollapsableWindow:new(x, y, width, height)
@@ -335,26 +335,4 @@ function VibeCheckerUI.GetFormattedTime(time)
     local convertedMinutes = math.floor(decimal * 6)        -- Cap it at 10 minutes instead of checking every minutes.
 
     return string.format("%02d:%01d0", hour, convertedMinutes)
-end
-
---************************************-
-
-
-require "ISUI/ISAdminPanelUI"
-require "ServerPointsAdminPanel"
-local _ISAdminPanelUICreate = ISAdminPanelUI.create
-
----@diagnostic disable-next-line: duplicate-set-field
-function ISAdminPanelUI:create()
-    _ISAdminPanelUICreate(self)
-
-    local lastButton = self.children[self.IDMax - 1].internal == "CANCEL" and self.children[self.IDMax - 2] or
-        self.children[self.IDMax - 1]
-    self.btnOpenVibeChecker = ISButton:new(lastButton.x, lastButton.y + 5 + lastButton.height,
-        self.sandboxOptionsBtn.width, self.sandboxOptionsBtn.height, "VibeChecker Menu", self,
-        VibeCheckerUI.RequestAccess)
-    self.btnOpenVibeChecker:initialise()
-    self.btnOpenVibeChecker:instantiate()
-    self.btnOpenVibeChecker.borderColor = self.buttonBorderColor
-    self:addChild(self.btnOpenVibeChecker)
 end
