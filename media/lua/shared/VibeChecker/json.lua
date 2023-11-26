@@ -373,4 +373,22 @@ function json.parse(str)
   return res
 end
 
+
+--* Additional stuff *--
+
+function json.readFile(modID, path )
+  local fullString = ""
+  local file =  getModFileReader(modID, path, false)
+  local line = file:readLine()
+  local count = 1
+  while line ~= nil do
+      fullString = fullString .. line .. "\n"
+      line = file:readLine()
+      count = count + 1
+  end
+  file:close()
+  return fullString
+end
+
+
 return json
