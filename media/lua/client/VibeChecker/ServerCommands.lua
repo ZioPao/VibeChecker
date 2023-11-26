@@ -20,8 +20,15 @@ function ServerCommands.ReceiveTimeFromServer(args)
 
     if args.showInChat then
         -- Show in chat
+        --print("Showing real time in chat")
         local fTime = VIBE_CHECKER_COMMON.GetFormattedTime(tonumber(time))
-        processGeneralMessage(fTime)
+        local finalString
+        if fTime == "" then
+            finalString = "Vibe Checker wasn't setup"
+        else
+            finalString = "Real time: " .. fTime
+        end
+        processGeneralMessage(finalString)
     end
 end
 

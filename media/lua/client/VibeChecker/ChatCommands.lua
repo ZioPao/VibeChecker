@@ -7,7 +7,6 @@ local og_ISChat_onCommandEntered = ISChat.onCommandEntered
 ---@diagnostic disable-next-line: duplicate-set-field
 function ISChat:onCommandEntered()
 
-    og_ISChat_onCommandEntered(self)
 
     local command = ISChat.instance.textEntry:getText()
     if not command or command == "" then return end
@@ -16,5 +15,6 @@ function ISChat:onCommandEntered()
         sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendTimeToClient", {showInChat = true})
     end
 
+    og_ISChat_onCommandEntered(self)
 
 end
