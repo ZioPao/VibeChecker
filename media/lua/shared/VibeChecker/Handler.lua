@@ -80,8 +80,6 @@ end
 
 ---Handles in the loop the real time stuff, to set the correct days, etc.
 function FixedTimeHandler.HandleRealTimeData()
-    -- TODO Use ModData for this
-
     if data.realTime == nil or FixedTimeHandler.baseDelta == nil then
         FixedTimeHandler.StopFixedTime(true)
         return
@@ -90,7 +88,7 @@ function FixedTimeHandler.HandleRealTimeData()
     data.realTime = data.realTime + FixedTimeHandler.baseDelta
     --print(data.realTime)
     if (data.realTime - 24) > 0 then
-        local months = VIBE_CHECKER_COMMON.GetNewMonthsTable()
+        local months = VIBE_CHECKER_COMMON.MONTHS
 
         -- Check month
         --print("One day has passed, must be set here!")

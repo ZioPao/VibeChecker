@@ -1,31 +1,17 @@
-VIBE_CHECKER_COMMON = {
-    MOD_ID = 'VibeChecker',
-    MONTHS = {
-        31, -- Jan
-        28, -- Feb
-        31, -- March
-        30, -- April
-        31, -- May
-        30, -- June
-        31, -- July
-        31, -- August
-        30, -- Sep
-        31, -- October
-        30, -- Nov
-        31, -- Dec
-    },
+VIBE_CHECKER_COMMON = {}
 
-}
+VIBE_CHECKER_COMMON.MOD_ID = 'VibeChecker'
 
----Get a new months table
----@return table
-function VIBE_CHECKER_COMMON.GetNewMonthsTable()
-    local months = {}
-    for i = 1, #VIBE_CHECKER_COMMON.MONTHS do
-        months[i] = VIBE_CHECKER_COMMON.MONTHS[i]
-    end
-
-    return months
-end
-
--- TODO Add debugprint
+VIBE_CHECKER_COMMON.MONTHS = {}
+VIBE_CHECKER_COMMON.MONTHS[1] = 31       -- January
+VIBE_CHECKER_COMMON.MONTHS[2] = 28       -- February
+VIBE_CHECKER_COMMON.MONTHS[3] = 31       -- March
+VIBE_CHECKER_COMMON.MONTHS[4] = 30       -- April
+VIBE_CHECKER_COMMON.MONTHS[5] = 31       -- May
+VIBE_CHECKER_COMMON.MONTHS[6] = 30       -- June
+VIBE_CHECKER_COMMON.MONTHS[7] = 31       -- July
+VIBE_CHECKER_COMMON.MONTHS[8] = 31       -- August
+VIBE_CHECKER_COMMON.MONTHS[9] = 30       -- September
+VIBE_CHECKER_COMMON.MONTHS[10] = 31      -- October
+VIBE_CHECKER_COMMON.MONTHS[11] = 30      -- November
+VIBE_CHECKER_COMMON.MONTHS[12] = 31      -- December

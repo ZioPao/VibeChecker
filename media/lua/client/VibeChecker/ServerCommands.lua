@@ -3,7 +3,6 @@ require("VibeChecker_UI")
 -- TODO Normal players in MP should be able to ask the server the "real time" from a chat command
 -- TODO Sandbox Option for SP to fix the time and preventing people from opening the UI
 -- TODO Way to import\export presets for the Climate Control
--- TODO Sleep seems strange
 
 local ServerCommands = {}
 
