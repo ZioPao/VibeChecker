@@ -12,9 +12,10 @@ end
 
 ---Send the time on the server to the client
 ---@param playerObj IsoPlayer
-function ClientCommands.SendTimeToClient(playerObj, _)
+---@param args {showInChat : boolean}
+function ClientCommands.SendTimeToClient(playerObj, args)
     local time = FixedTimeHandler.GetRealTimeData()
-	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveTimeFromServer', {time=time})
+	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveTimeFromServer', {time=time, showInChat = args.showInChat})
 end
 
 ---Set back the correct time on the server
@@ -30,6 +31,9 @@ function ClientCommands.SetFixedTime(playerObj, args)
     FixedTimeHandler.SetupFixedTime(fixedTime)
 
 end
+
+
+--* UI PERMISSION STUFF *--
 
 
 function ClientCommands.RequestAccess(playerObj, _)

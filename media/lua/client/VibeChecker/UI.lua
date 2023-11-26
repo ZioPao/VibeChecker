@@ -153,7 +153,7 @@ end
 ---@param topLine string
 ---@param time number | string?
 function VibeCheckerUI:updateText(panel, topLine, time)
-    local formattedString = VibeCheckerUI.GetFormattedTime(tonumber(time))
+    local formattedString = VIBE_CHECKER_COMMON.GetFormattedTime(tonumber(time))
     local finalStr
     if formattedString == nil or formattedString == "" then
         finalStr = " <CENTRE> " .. topLine .. " <LINE> " .. STR_TAB.WAIT_STR
@@ -317,7 +317,7 @@ end
 
 ---Send a request to the server to receive the actual calculated time
 function VibeCheckerUI.RequestTimeFromServer()
-    sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendTimeToClient", {})
+    sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendTimeToClient", {showInChat = false})
 end
 
 ---Set the time received from the server
@@ -326,16 +326,3 @@ function VibeCheckerUI.SetRealTimeFromServer(time)
     VibeCheckerUI.realTime = time
 end
 
----Get formatted time
----@param time number?
----@return string
-function VibeCheckerUI.GetFormattedTime(time)
-    if time == nil then return "" end
-
-    -- Get minutes
-    local hour = math.floor(time)
-    local decimal = math.fmod(time, 1)
-    local convertedMinutes = math.floor(decimal * 6)        -- Cap it at 10 minutes instead of checking every minutes.
-
-    return string.format("%02d:%01d0", hour, convertedMinutes)
-end

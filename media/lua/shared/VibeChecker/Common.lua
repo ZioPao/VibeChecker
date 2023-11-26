@@ -15,3 +15,18 @@ VIBE_CHECKER_COMMON.MONTHS[9] = 30       -- September
 VIBE_CHECKER_COMMON.MONTHS[10] = 31      -- October
 VIBE_CHECKER_COMMON.MONTHS[11] = 30      -- November
 VIBE_CHECKER_COMMON.MONTHS[12] = 31      -- December
+
+
+---Get formatted time
+---@param time number?
+---@return string
+function VIBE_CHECKER_COMMON.GetFormattedTime(time)
+    if time == nil then return "" end
+
+    -- Get minutes
+    local hour = math.floor(time)
+    local decimal = math.fmod(time, 1)
+    local convertedMinutes = math.floor(decimal * 6)        -- Cap it at 10 minutes instead of checking every minutes.
+
+    return string.format("%02d:%01d0", hour, convertedMinutes)
+end

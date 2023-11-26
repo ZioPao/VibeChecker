@@ -15,10 +15,16 @@ function ServerCommands.ReceiveIsTimeSetFromServer(args)
 end
 
 ---Receive time from the server
----@param args {time : number}
+---@param args {time : number, showInChat : boolean}
 function ServerCommands.ReceiveTimeFromServer(args)
     local time = args.time
     VibeCheckerUI.SetRealTimeFromServer(time)
+
+    if args.showInChat then
+        -- TODO Show in chat
+        local fTime = VIBE_CHECKER_COMMON.GetFormattedTime(tonumber(time))
+        processGeneralMessage(fTime)
+    end
 end
 
 ---@param args {hasPermission : boolean}
