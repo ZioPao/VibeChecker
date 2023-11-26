@@ -1,0 +1,14 @@
+{"DESATURATION":{"isTicked":false,"value":0}
+,"GLOBAL_LIGHT_INTENSITY":{"isTicked":false,"value":0}
+,"NIGHT_STRENGTH":{"isTicked":false,"value":0}
+,"PRECIPITATION_INTENSITY":{"isTicked":false,"value":0}
+,"TEMPERATURE":{"isTicked":false,"value":0}
+,"FOG_INTENSITY":{"isTicked":false,"value":0}
+,"WIND_INTENSITY":{"isTicked":false,"value":0}
+,"WIND_ANGLE_INTENSITY":{"isTicked":false,"value":0}
+,"CLOUD_INTENSITY":{"isTicked":false,"value":0}
+,"AMBIENT":{"isTicked":false,"value":0}
+,"VIEW_DISTANCE":{"isTicked":false,"value":0}
+,"DAYLIGHT_STRENGTH":{"isTicked":false,"value":0}
+,"HUMIDITY":{"isTicked":false,"value":0}
+}

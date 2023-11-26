@@ -13,9 +13,11 @@ local STR_TAB = {
 }
 
 ------------------
+local FixedTimeHandler = require("VibeChecker/Handler")
+
 
 ---@class VibeCheckerUI : ISCollapsableWindow
-VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
+local VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
 VibeCheckerUI.realTime = -1     -- Init
 VibeCheckerUI.isTimeSet = false -- Static boolean
 
@@ -326,3 +328,4 @@ function VibeCheckerUI.SetRealTimeFromServer(time)
     VibeCheckerUI.realTime = time
 end
 
+return VibeCheckerUI

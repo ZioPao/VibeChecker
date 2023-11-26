@@ -1,8 +1,6 @@
-require("VibeChecker_UI")
+local VibeCheckerUI = require("VibeChecker/UIMain")
 
--- TODO Normal players in MP should be able to ask the server the "real time" from a chat command
 -- TODO Sandbox Option for SP to fix the time and preventing people from opening the UI
--- TODO Way to import\export presets for the Climate Control
 
 local ServerCommands = {}
 
@@ -21,7 +19,7 @@ function ServerCommands.ReceiveTimeFromServer(args)
     VibeCheckerUI.SetRealTimeFromServer(time)
 
     if args.showInChat then
-        -- TODO Show in chat
+        -- Show in chat
         local fTime = VIBE_CHECKER_COMMON.GetFormattedTime(tonumber(time))
         processGeneralMessage(fTime)
     end

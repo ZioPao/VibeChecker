@@ -1,8 +1,10 @@
 local chatStream = {name = "requestRealTime", command = "/requestRealTime", shortCommand = "/rrt", tabID = 1}
 table.insert(ISChat.allChatStreams, chatStream)
 
+-- TODO Test this
 local og_ISChat_onCommandEntered = ISChat.onCommandEntered
 
+---@diagnostic disable-next-line: duplicate-set-field
 function ISChat:onCommandEntered()
 
     og_ISChat_onCommandEntered(self)

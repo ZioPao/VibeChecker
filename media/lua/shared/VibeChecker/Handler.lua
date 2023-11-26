@@ -5,7 +5,7 @@
 ---@field gameTime GameTime
 ---@field baseDelta number
 ---@field timeBeforeSleep number?
-FixedTimeHandler = {}
+local FixedTimeHandler = {}
 local data = {}
 
 ---Will setup everything related to GlobalModData to save the real time and whatever else we may need
@@ -172,3 +172,5 @@ function FixedTimeHandler.AssignUser(player)
     FixedTimeHandler.assignedUser = player
 end
 
+
+return FixedTimeHandler

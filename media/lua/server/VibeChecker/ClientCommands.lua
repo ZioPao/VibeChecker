@@ -1,10 +1,11 @@
+local FixedTimeHandler = require("VibeChecker/Handler")
+-----------------
+
 local ClientCommands = {}
-
-
 
 ---Set back the correct time on the server
 ---@param playerObj IsoPlayer
-function ClientCommands.SendIsTimeSetStatus(playerObj, _)
+function ClientCommands.SendIsTimeSetStatus(playerObj)
     local isTimeSet = FixedTimeHandler.GetIsTimeSet()
 	--print("[VibeChecker] Received request from client for isTimeSet. Right now it's " .. tostring(isTimeSet))
 	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {isTimeSet=isTimeSet})
@@ -19,14 +20,13 @@ function ClientCommands.SendTimeToClient(playerObj, args)
 end
 
 ---Set back the correct time on the server
-function ClientCommands.StopFixedTime(_, _)
+function ClientCommands.StopFixedTime()
     FixedTimeHandler.StopFixedTime()
 end
 
 ---Set the fixed time on the handler on the server
----@param playerObj IsoPlayer
 ---@param args {fixedTime : number}
-function ClientCommands.SetFixedTime(playerObj, args)
+function ClientCommands.SetFixedTime(_, args)
     local fixedTime = args.fixedTime
     FixedTimeHandler.SetupFixedTime(fixedTime)
 

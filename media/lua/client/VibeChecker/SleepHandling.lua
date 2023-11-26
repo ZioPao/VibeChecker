@@ -1,4 +1,9 @@
 
+-- Skip this part if we're in a MP environment
+if isClient() then return end
+local FixedTimeHandler = require("VibeChecker/Handler")
+
+
 local os_time = os.time
 ---@class Delay
 ---@field eTime number
@@ -27,8 +32,7 @@ end
 
 
 
--- Skip this part if we're in a MP environment
-if isClient() then return end
+
 
 local og_ISWorldObjectContextMenu_onSleepWalkToComplete = ISWorldObjectContextMenu.onSleepWalkToComplete
 

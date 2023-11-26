@@ -1,3 +1,5 @@
+local VibeCheckerUI = require("VibeChecker/UIMain")
+
 local keybindVal = "OpenVibeChecker"
 
 local function InitKeybinds()
