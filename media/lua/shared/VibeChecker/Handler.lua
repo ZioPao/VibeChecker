@@ -22,6 +22,12 @@ end
 
 if not isServer() and not isClient() then
     Events.OnGameStart.Add(FixedTimeHandler.Init)
+
+    --  Set Mode
+    if SandboxVars.VibeChecker.SetMode then
+        -- Set the time forcefully
+        FixedTimeHandler.SetupFixedTime(SandboxVars.VibeChecker.SetModeFixedTime)
+    end
 elseif isServer() then
     Events.OnServerStarted.Add(FixedTimeHandler.Init)
 end

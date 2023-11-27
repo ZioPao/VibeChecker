@@ -376,9 +376,15 @@ end
 
 --* Additional stuff *--
 
-function json.readFile(modID, path )
+---comment
+---@param modID string
+---@param path string
+---@return string?
+function json.readFile(modID, path)
   local fullString = ""
   local file =  getModFileReader(modID, path, false)
+  if file == nil then return nil end
+
   local line = file:readLine()
   local count = 1
   while line ~= nil do

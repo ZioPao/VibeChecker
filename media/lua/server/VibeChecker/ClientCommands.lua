@@ -35,8 +35,6 @@ end
 
 
 --* UI PERMISSION STUFF *--
-
-
 function ClientCommands.RequestAccess(playerObj, _)
 	local hasPermission = FixedTimeHandler.assignedUser == nil
 
@@ -70,7 +68,6 @@ function ClientCommands.ForfeitAccess(playerObj, _)
 		FixedTimeHandler.assignedUser = nil
 	end
 end
-
 
 --------------------------------
 

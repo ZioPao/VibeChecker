@@ -12,6 +12,7 @@ Events.OnGameBoot.Add(InitKeybinds)
 
 local function HandleKey(key)
     if key ~= getCore():getKey(keybindVal) then return end
+    if SandboxVars.VibeChecker.SetMode == true then return end
 
     if isClient() and isAdmin() then
         VibeCheckerUI.RequestAccess()

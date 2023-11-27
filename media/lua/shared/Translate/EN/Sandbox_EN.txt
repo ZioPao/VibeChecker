@@ -1,0 +1,5 @@
+Sandbox_EN = {
+    Sandbox_VibeChecker = "Vibe Checker",
+    Sandbox_VibeChecker_SetMode = "Set Mode (SP ONLY)",
+    Sandbox_VibeChecker_SetModeFixedTime = "Fixed Time in set mode"
+}

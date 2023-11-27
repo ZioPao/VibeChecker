@@ -9,6 +9,8 @@ local Common = require("VibeChecker/Common")
 ---@alias floatsTab table<string, {tickbox : ISTickBox, slider : ISSliderPanel}>
 ---@alias colorsTab table<string, {tickbox : ISTickBox, sliderR : ISSliderPanel, sliderG : ISSliderPanel, sliderB : ISSliderPanel, sliderA : ISSliderPanel, sliderR_int : ISSliderPanel, sliderG_int : ISSliderPanel, sliderB_int : ISSliderPanel, sliderA_int : ISSliderPanel}>
 
+
+
 function ClimateOptionsDebug:createChildren()
     ISPanel.createChildren(self)
 
@@ -140,35 +142,37 @@ end
 --- Get JSON reader, read the files (each one) and re set the sliders
 local function OnLoadSettings(btn)
     local strClimFloats = json.readFile(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_FLOATS)
+    if strClimFloats ~= nil and strClimFloats ~= "" then
+        ---@type savedFloatsT
+        local dataFloats = json.parse(strClimFloats)
+        ---@type floatsTab
+        local floats = btn.floats
 
-    ---@type savedFloatsT
-    local dataFloats = json.parse(strClimFloats)
-    ---@type floatsTab
-    local floats = btn.floats
-
-    for category, v in pairs(dataFloats) do
-        floats[category].tickbox:setSelected(1, v.isTicked)
-        btn.allOptions[category].option:setEnableAdmin(v.isTicked)
-        floats[category].slider:setCurrentValue(v.value)
+        for category, v in pairs(dataFloats) do
+            floats[category].tickbox:setSelected(1, v.isTicked)
+            btn.allOptions[category].option:setEnableAdmin(v.isTicked)
+            floats[category].slider:setCurrentValue(v.value)
+        end
     end
 
     local strClimColors = json.readFile(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_COLORS)
-    
-    ---@type savedColorsT
-    local dataColors = json.parse(strClimColors)
-    ---@type colorsTab
-    local colors = btn.colors
+    if strClimColors ~= nil and strClimColors ~= "" then
+        ---@type savedColorsT
+        local dataColors = json.parse(strClimColors)
+        ---@type colorsTab
+        local colors = btn.colors
 
-    for category, v in pairs(dataColors) do
-        colors[category].tickbox:setSelected(1, v.isTicked)
-        btn.allOptions[category].option:setEnableAdmin(v.isTicked)
-        colors[category].sliderR:setCurrentValue(v.r)
-        colors[category].sliderG:setCurrentValue(v.g)
-        colors[category].sliderB:setCurrentValue(v.b)
-        colors[category].sliderR_int:setCurrentValue(v.r_int)
-        colors[category].sliderG_int:setCurrentValue(v.g_int)
-        colors[category].sliderB_int:setCurrentValue(v.b_int)
-        colors[category].sliderA_int:setCurrentValue(v.a_int)
+        for category, v in pairs(dataColors) do
+            colors[category].tickbox:setSelected(1, v.isTicked)
+            btn.allOptions[category].option:setEnableAdmin(v.isTicked)
+            colors[category].sliderR:setCurrentValue(v.r)
+            colors[category].sliderG:setCurrentValue(v.g)
+            colors[category].sliderB:setCurrentValue(v.b)
+            colors[category].sliderR_int:setCurrentValue(v.r_int)
+            colors[category].sliderG_int:setCurrentValue(v.g_int)
+            colors[category].sliderB_int:setCurrentValue(v.b_int)
+            colors[category].sliderA_int:setCurrentValue(v.a_int)
+        end
     end
 end
 
@@ -201,17 +205,31 @@ end
 function ClimateOptionsDebug:addSaveOption(_x, _y, _w)
     -- TODO Way to delete save
     local h = 20
-    ISDebugUtils.addButton(self, self, _x, _y, _w, h, "Save", OnSaveSettings)
+    _, self.saveBtn = ISDebugUtils.addButton(self, nil, _x, _y, _w, h, "Save", OnSaveSettings)
     _y = _y + h
 
-    ISDebugUtils.addButton(self, self, _x, _y, _w, h, "Load", OnLoadSettings)
+    _, self.loadBtn =ISDebugUtils.addButton(self, nil, _x, _y, _w, h, "Load", OnLoadSettings)
     _y = _y + h
 
-    local y, _ = ISDebugUtils.addButton(self, self, _x, _y, _w, h, "Reset", OnResetSettings)
+    local y
+    y, self.resetBtn = ISDebugUtils.addButton(self, nil, _x, _y, _w, h, "Reset", OnResetSettings)
 
 
     return y
 end
+
+-- Handle setting the settings in set mode
+Events.OnGameStart.Add(function()
+    if SandboxVars.VibeChecker.SetMode then
+        local tempPanel = ISDebugPanelBase.OnOpenPanel(ClimateControlDebug, 0, 0, 1, 1, "CLIMATE CONTROL")
+
+        local climateOptions = tempPanel.panelInfo[1].panelClass
+        print("Setting imported values!")
+        climateOptions.loadBtn:forceClick()
+        tempPanel:close()
+    end
+
+end)
 
 
 

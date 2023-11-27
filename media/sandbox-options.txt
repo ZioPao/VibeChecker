@@ -1,0 +1,17 @@
+VERSION = 1,
+option VibeChecker.SetMode
+{
+    type = boolean,
+    default = false,
+    page = VibeChecker,
+    translation = VibeChecker_SetMode,
+}
+option VibeChecker.SetModeFixedTime
+{
+    type = integer,
+    min = 0,
+    max = 23,
+    default = 12,
+    page = VibeChecker,
+    translation = VibeChecker_SetModeFixedTime,
+}

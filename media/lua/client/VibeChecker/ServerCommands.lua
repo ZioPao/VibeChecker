@@ -1,4 +1,5 @@
 local Common = require("VibeChecker/Common")
+local Delay = require("VibeChecker/Delay")
 local VibeCheckerUI = require("VibeChecker/UIMain")
 
 -- TODO Sandbox Option for SP to fix the time and preventing people from opening the UI
@@ -57,24 +58,12 @@ Events.OnServerCommand.Add(OnServerCommand)
 -- ask the server if isTimeSet is on there too, so we can sync it on the client
 
 if isClient() then
-    local os_time = os.time
-    local eTime = 0
-
-    ---We need to delay it for a bit since this piece of shit won't launch at startup
-    local function HandleDelayedAsk()
-        local cTime = os_time()
-        if cTime > eTime then
-            sendClientCommand(Common.MOD_ID, "SendIsTimeSetStatus", {})
-            Events.OnTick.Remove(HandleDelayedAsk)
-        end
-    end
-
     ---At startup, the client is gonna ask the server if isTimeSet is on or not
     local function AskIsTimeSetFromServer()
         --print("[VibeChecker] Should ask thing to server")
-
-        eTime = 5 + os_time()
-        Events.OnTick.Add(HandleDelayedAsk)
+        Delay.Add(function()
+            sendClientCommand(Common.MOD_ID, "SendIsTimeSetStatus", {})
+        end, nil, 5)
     end
 
     Events.OnCreatePlayer.Add(AskIsTimeSetFromServer)
