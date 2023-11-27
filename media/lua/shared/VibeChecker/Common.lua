@@ -34,4 +34,9 @@ function Common.GetFormattedTime(time)
     return string.format("%02d:%01d0", hour, convertedMinutes)
 end
 
+function Common.debugPrint(string)
+    if string ~= nil and isDebugEnabled() then
+        print("VibeChecker: " .. string)
+    end
+end
 return Common

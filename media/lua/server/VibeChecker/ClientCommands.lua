@@ -55,7 +55,7 @@ function ClientCommands.RequestAccess(playerObj, _)
 	end
 
 	if hasPermission then
-		print("Assigning player: " .. tostring(playerObj))
+		Common.debugPrint("Assigning player: " .. tostring(playerObj))
 		FixedTimeHandler.AssignUser(playerObj)
 		ClientCommands.SendIsTimeSetStatus(playerObj)
 	end
@@ -64,7 +64,7 @@ end
 
 function ClientCommands.ForfeitAccess(playerObj, _)
 	if FixedTimeHandler.assignedUser == playerObj then
-		print("Unassigned player " .. tostring(playerObj))
+		Common.debugPrint("Unassigned player " .. tostring(playerObj))
 		FixedTimeHandler.assignedUser = nil
 	end
 end

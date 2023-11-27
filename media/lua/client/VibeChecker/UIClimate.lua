@@ -126,13 +126,13 @@ local STR_JSON_CLIM_COLORS = "climColors.json"
 local STR_JSON_CLIM_FLOATS = "climFloats.json"
 
 local function OnSaveSettings(btn)
-    print("Save floats")
+    Common.debugPrint("Save floats")
     local jsonStr = json.stringify(btn.floatsJson)
     local writer = getModFileWriter(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_FLOATS, true, false)
     writer:write(jsonStr)
     writer:close()
 
-    print("Save Colors")
+    Common.debugPrint("Save Colors")
     jsonStr = json.stringify(btn.colorsJson)
     writer = getModFileWriter(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_COLORS, true, false)
     writer:write(jsonStr)
@@ -223,13 +223,10 @@ Events.OnGameStart.Add(function()
     if SandboxVars.VibeChecker.SetMode then
         local tempPanel = ISDebugPanelBase.OnOpenPanel(ClimateControlDebug, 0, 0, 1, 1, "CLIMATE CONTROL")
 
-        local climateOptions = tempPanel.panelInfo[1].panelClass
-        print("Setting imported values!")
+        local climateOptions = tempPanel.panelInfo[1].panel
+        --print("Setting imported values!")
         climateOptions.loadBtn:forceClick()
         tempPanel:close()
     end
 
 end)
-
-
-
