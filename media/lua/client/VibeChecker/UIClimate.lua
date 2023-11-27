@@ -4,6 +4,7 @@
 -- Since it's all handled with y going down and down by adding stuff, we don't have a lot of options overriding it,
 -- So we're gonna do it the dirty way.
 require "DebugUIs/DebugMenu/Climate/ClimateOptionsDebug"
+local Common = require("VibeChecker/Common")
 
 ---@alias floatsTab table<string, {tickbox : ISTickBox, slider : ISSliderPanel}>
 ---@alias colorsTab table<string, {tickbox : ISTickBox, sliderR : ISSliderPanel, sliderG : ISSliderPanel, sliderB : ISSliderPanel, sliderA : ISSliderPanel, sliderR_int : ISSliderPanel, sliderG_int : ISSliderPanel, sliderB_int : ISSliderPanel, sliderA_int : ISSliderPanel}>
@@ -125,20 +126,20 @@ local STR_JSON_CLIM_FLOATS = "climFloats.json"
 local function OnSaveSettings(btn)
     print("Save floats")
     local jsonStr = json.stringify(btn.floatsJson)
-    local writer = getModFileWriter(VIBE_CHECKER_COMMON.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_FLOATS, true, false)
+    local writer = getModFileWriter(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_FLOATS, true, false)
     writer:write(jsonStr)
     writer:close()
 
     print("Save Colors")
     jsonStr = json.stringify(btn.colorsJson)
-    writer = getModFileWriter(VIBE_CHECKER_COMMON.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_COLORS, true, false)
+    writer = getModFileWriter(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_COLORS, true, false)
     writer:write(jsonStr)
     writer:close()
 end
 
 --- Get JSON reader, read the files (each one) and re set the sliders
 local function OnLoadSettings(btn)
-    local strClimFloats = json.readFile(VIBE_CHECKER_COMMON.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_FLOATS)
+    local strClimFloats = json.readFile(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_FLOATS)
 
     ---@type savedFloatsT
     local dataFloats = json.parse(strClimFloats)
@@ -151,7 +152,7 @@ local function OnLoadSettings(btn)
         floats[category].slider:setCurrentValue(v.value)
     end
 
-    local strClimColors = json.readFile(VIBE_CHECKER_COMMON.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_COLORS)
+    local strClimColors = json.readFile(Common.MOD_ID, STR_JSON_FOLDER .. STR_JSON_CLIM_COLORS)
     
     ---@type savedColorsT
     local dataColors = json.parse(strClimColors)

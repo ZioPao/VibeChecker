@@ -1,26 +1,29 @@
-VIBE_CHECKER_COMMON = {}
+local Common = {}
 
-VIBE_CHECKER_COMMON.MOD_ID = 'VibeChecker'
+--- id=3096949956 REUPLOAD
+--- id=3093274467 OG
 
-VIBE_CHECKER_COMMON.MONTHS = {}
-VIBE_CHECKER_COMMON.MONTHS[1] = 31       -- January
-VIBE_CHECKER_COMMON.MONTHS[2] = 28       -- February
-VIBE_CHECKER_COMMON.MONTHS[3] = 31       -- March
-VIBE_CHECKER_COMMON.MONTHS[4] = 30       -- April
-VIBE_CHECKER_COMMON.MONTHS[5] = 31       -- May
-VIBE_CHECKER_COMMON.MONTHS[6] = 30       -- June
-VIBE_CHECKER_COMMON.MONTHS[7] = 31       -- July
-VIBE_CHECKER_COMMON.MONTHS[8] = 31       -- August
-VIBE_CHECKER_COMMON.MONTHS[9] = 30       -- September
-VIBE_CHECKER_COMMON.MONTHS[10] = 31      -- October
-VIBE_CHECKER_COMMON.MONTHS[11] = 30      -- November
-VIBE_CHECKER_COMMON.MONTHS[12] = 31      -- December
+Common.MOD_ID = 'VibeChecker'
+
+Common.MONTHS = {}
+Common.MONTHS[1] = 31       -- January
+Common.MONTHS[2] = 28       -- February
+Common.MONTHS[3] = 31       -- March
+Common.MONTHS[4] = 30       -- April
+Common.MONTHS[5] = 31       -- May
+Common.MONTHS[6] = 30       -- June
+Common.MONTHS[7] = 31       -- July
+Common.MONTHS[8] = 31       -- August
+Common.MONTHS[9] = 30       -- September
+Common.MONTHS[10] = 31      -- October
+Common.MONTHS[11] = 30      -- November
+Common.MONTHS[12] = 31      -- December
 
 
 ---Get formatted time
 ---@param time number?
 ---@return string
-function VIBE_CHECKER_COMMON.GetFormattedTime(time)
+function Common.GetFormattedTime(time)
     if time == nil then return "" end
 
     -- Get minutes
@@ -30,3 +33,5 @@ function VIBE_CHECKER_COMMON.GetFormattedTime(time)
 
     return string.format("%02d:%01d0", hour, convertedMinutes)
 end
+
+return Common

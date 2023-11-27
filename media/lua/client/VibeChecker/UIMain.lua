@@ -14,7 +14,7 @@ local STR_TAB = {
 
 ------------------
 local FixedTimeHandler = require("VibeChecker/Handler")
-
+local Common = require("VibeChecker/Common")
 
 ---@class VibeCheckerUI : ISCollapsableWindow
 local VibeCheckerUI = ISCollapsableWindow:derive("VibeCheckerUI")
@@ -155,7 +155,7 @@ end
 ---@param topLine string
 ---@param time number | string?
 function VibeCheckerUI:updateText(panel, topLine, time)
-    local formattedString = VIBE_CHECKER_COMMON.GetFormattedTime(tonumber(time))
+    local formattedString = Common.GetFormattedTime(tonumber(time))
     local finalStr
     if formattedString == nil or formattedString == "" then
         finalStr = " <CENTRE> " .. topLine .. " <LINE> " .. STR_TAB.WAIT_STR
@@ -244,10 +244,10 @@ function VibeCheckerUI:handleFixedTime()
     if isClient() then
         if VibeCheckerUI.isTimeSet then
             Events.EveryOneMinute.Remove(VibeCheckerUI.RequestTimeFromServer)
-            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "StopFixedTime", {})
+            sendClientCommand(Common.MOD_ID, "StopFixedTime", {})
         else
             Events.EveryOneMinute.Add(VibeCheckerUI.RequestTimeFromServer)
-            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SetFixedTime", { fixedTime = fixedTime })
+            sendClientCommand(Common.MOD_ID, "SetFixedTime", { fixedTime = fixedTime })
         end
     else
         if VibeCheckerUI.isTimeSet then
@@ -286,7 +286,7 @@ function VibeCheckerUI:close()
     end
 
     if isClient() then
-        sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "ForfeitAccess", {})
+        sendClientCommand(Common.MOD_ID, "ForfeitAccess", {})
     end
 
     VibeCheckerUI.instance = nil
@@ -295,7 +295,7 @@ end
 --*******************************--
 
 function VibeCheckerUI.RequestAccess()
-    sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "RequestAccess", {})
+    sendClientCommand(Common.MOD_ID, "RequestAccess", {})
 end
 
 function VibeCheckerUI.OnOpenPanel()
@@ -319,7 +319,7 @@ end
 
 ---Send a request to the server to receive the actual calculated time
 function VibeCheckerUI.RequestTimeFromServer()
-    sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendTimeToClient", {showInChat = false})
+    sendClientCommand(Common.MOD_ID, "SendTimeToClient", {showInChat = false})
 end
 
 ---Set the time received from the server

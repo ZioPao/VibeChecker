@@ -1,3 +1,6 @@
+local Common = require("VibeChecker/Common")
+
+
 -- Main idea: fixed time, but days should advance anyway to
 -- let stuff like the passing of time for seasons work.
 
@@ -88,7 +91,7 @@ function FixedTimeHandler.HandleRealTimeData()
     data.realTime = data.realTime + FixedTimeHandler.baseDelta
     --print(data.realTime)
     if (data.realTime - 24) > 0 then
-        local months = VIBE_CHECKER_COMMON.MONTHS
+        local months = Common.MONTHS
 
         -- Check month
         --print("One day has passed, must be set here!")

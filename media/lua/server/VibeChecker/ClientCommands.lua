@@ -1,3 +1,4 @@
+local Common = require("VibeChecker/Common")
 local FixedTimeHandler = require("VibeChecker/Handler")
 -----------------
 
@@ -8,7 +9,7 @@ local ClientCommands = {}
 function ClientCommands.SendIsTimeSetStatus(playerObj)
     local isTimeSet = FixedTimeHandler.GetIsTimeSet()
 	--print("[VibeChecker] Received request from client for isTimeSet. Right now it's " .. tostring(isTimeSet))
-	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveIsTimeSetFromServer', {isTimeSet=isTimeSet})
+	sendServerCommand(playerObj, Common.MOD_ID, 'ReceiveIsTimeSetFromServer', {isTimeSet=isTimeSet})
 end
 
 ---Send the time on the server to the client
@@ -16,7 +17,7 @@ end
 ---@param args {showInChat : boolean}
 function ClientCommands.SendTimeToClient(playerObj, args)
     local time = FixedTimeHandler.GetRealTimeData()
-	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, 'ReceiveTimeFromServer', {time=time, showInChat = args.showInChat})
+	sendServerCommand(playerObj, Common.MOD_ID, 'ReceiveTimeFromServer', {time=time, showInChat = args.showInChat})
 end
 
 ---Set back the correct time on the server
@@ -60,7 +61,7 @@ function ClientCommands.RequestAccess(playerObj, _)
 		FixedTimeHandler.AssignUser(playerObj)
 		ClientCommands.SendIsTimeSetStatus(playerObj)
 	end
-	sendServerCommand(playerObj, VIBE_CHECKER_COMMON.MOD_ID, "ReceivePermission", {hasPermission = hasPermission})
+	sendServerCommand(playerObj, Common.MOD_ID, "ReceivePermission", {hasPermission = hasPermission})
 end
 
 function ClientCommands.ForfeitAccess(playerObj, _)
@@ -74,7 +75,7 @@ end
 --------------------------------
 
 local function OnClientCommand(module, command, playerObj, args)
-	if module ~= VIBE_CHECKER_COMMON.MOD_ID then return end
+	if module ~= Common.MOD_ID then return end
 	--print("[VibeChecker] Received command: " .. command)
 	if ClientCommands[command] then
 		ClientCommands[command](playerObj, args)

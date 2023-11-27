@@ -1,3 +1,4 @@
+local Common = require("VibeChecker/Common")
 local VibeCheckerUI = require("VibeChecker/UIMain")
 
 -- TODO Sandbox Option for SP to fix the time and preventing people from opening the UI
@@ -21,7 +22,7 @@ function ServerCommands.ReceiveTimeFromServer(args)
     if args.showInChat then
         -- Show in chat
         --print("Showing real time in chat")
-        local fTime = VIBE_CHECKER_COMMON.GetFormattedTime(tonumber(time))
+        local fTime = Common.GetFormattedTime(tonumber(time))
         local finalString
         if fTime == "" then
             finalString = "Vibe Checker wasn't setup"
@@ -42,7 +43,7 @@ end
 --------------------------------
 
 local function OnServerCommand(module, command, args)
-    if module ~= VIBE_CHECKER_COMMON.MOD_ID then return end
+    if module ~= Common.MOD_ID then return end
     if ServerCommands[command] then
         ServerCommands[command](args)
     end
@@ -63,7 +64,7 @@ if isClient() then
     local function HandleDelayedAsk()
         local cTime = os_time()
         if cTime > eTime then
-            sendClientCommand(VIBE_CHECKER_COMMON.MOD_ID, "SendIsTimeSetStatus", {})
+            sendClientCommand(Common.MOD_ID, "SendIsTimeSetStatus", {})
             Events.OnTick.Remove(HandleDelayedAsk)
         end
     end
