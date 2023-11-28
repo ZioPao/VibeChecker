@@ -30,7 +30,8 @@ function Delay.Loop()
     for i=1, #Delay.running do
         local tab = Delay.running[i]
 
-        if cTime > tab.eTime then
+
+        if tab and cTime > tab.eTime then
             ---@diagnostic disable-next-line: deprecated
             tab.func(unpack(tab.args))
             table.remove(Delay.running, i)
