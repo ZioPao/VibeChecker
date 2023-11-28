@@ -12,7 +12,7 @@ function Delay.Add(func, args, time)
         Events.OnTick.Add(Delay.Loop)
     end
 
-    table.insert(Delay.running{
+    table.insert(Delay.running, {
         func = func,
         args = args,
         eTime = time + os_time(),
